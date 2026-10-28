@@ -1,9 +1,9 @@
 ---
 // src/components/primicia/Periodico.astro
 // La portada de diario que tapa la invitación al abrirla. El botón la
-// desvanece, arranca la música y, solo en PC, pide pantalla completa como
-// la plantilla. En celular y tablet no: en muchos Android eso giraba la
-// pantalla a horizontal.
+// desvanece, arranca la música y pide pantalla completa como la plantilla,
+// salvo en celular: en muchos Android eso giraba la pantalla a horizontal.
+// En tablet y PC sigue igual.
 import { fecha } from "../../datos/boda";
 
 const lineaFecha = `${fecha.diaSemana}, ${fecha.dia} de ${fecha.mes}, ${fecha.anio}`.toUpperCase();
@@ -144,9 +144,11 @@ const lineaFecha = `${fecha.diaSemana}, ${fecha.dia} de ${fecha.mes}, ${fecha.an
         window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
         reproducir();
 
-        // Pantalla táctil = celular o tablet: ahí no se pide
-        const esPantallaTactil = window.matchMedia("(pointer: coarse)").matches;
-        if (!esPantallaTactil) {
+        // Solo en celular no se pide: pantalla táctil y chica. La tablet
+        // (táctil pero grande) y la PC siguen como la plantilla.
+        const ladoCorto = Math.min(window.screen.width, window.screen.height);
+        const esCelular = window.matchMedia("(pointer: coarse)").matches && ladoCorto < 600;
+        if (!esCelular) {
             const raiz = document.documentElement as HTMLElement & {
                 webkitRequestFullscreen?: () => void;
             };
