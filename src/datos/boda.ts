@@ -29,7 +29,7 @@ export const ceremonia = {
     titulo: "Ceremonia Religiosa",
     lugar: "Iglesia San Martín de Porres",
     hora: "16:00",
-    direccion: "Calle Jamaica esquina calle Cuba, Zona Miraflores.",
+    direccion: "Av. Roca y Coronado entre 2do anillo y 3ro esq. Calle Bermejo.",
     mapa: "https://maps.app.goo.gl/nAYsuzn86rVNa1Ue9",
     foto: "/imagenes/ceremonia.jpeg",
 };
@@ -39,7 +39,7 @@ export const recepcion = {
     lugar: "Ciudad Jardín Salón De Eventos",
     hora: "19:00",
     direccion:
-        "Calle Cañada Strongest #1822, a media cuadra de la Plaza del Estudiante.",
+        "Av. Moscú entre 7mo y 8vo anillo esq. calle Rosario.",
     mapa: "https://maps.app.goo.gl/FvEyxYoXjXPrU6QHA",
     foto: "/imagenes/recepcion.jpg",
 };
