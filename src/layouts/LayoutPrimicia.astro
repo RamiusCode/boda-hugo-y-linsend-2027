@@ -1,0 +1,138 @@
+---
+// src/layouts/LayoutPrimicia.astro
+// El layout del diseño "periódico". A diferencia de Layout.astro, que
+// encierra la invitación en una columna de celular, este ocupa el ancho
+// entero: en tablet y PC la invitación se reacomoda en columnas.
+import { novio, novia } from "../datos/boda";
+
+export interface Props {
+    title: string;
+}
+const { title } = Astro.props;
+
+/*
+   Vista previa al compartir el link: la imagen va en 1200x630, que es la
+   franja que usa WhatsApp, y la ruta tiene que ser completa (Astro.site).
+*/
+const miniatura = new URL("/imagenes/primicia/miniatura-whatsapp.jpg", Astro.site).href;
+const paginaActual = new URL(Astro.url.pathname, Astro.site).href;
+const tituloPreview = `${novio} & ${novia}`;
+---
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="color-scheme" content="only light" />
+        <link rel="icon" type="image/png" href="/iconos/Anillos.png" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+
+        <!-- Avisa que hay JavaScript: recién así se esconden los elementos que entran animados -->
+        <script is:inline>document.documentElement.classList.add("con-js");</script>
+
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={tituloPreview} />
+        <meta property="og:title" content={tituloPreview} />
+        <meta property="og:url" content={paginaActual} />
+        <meta property="og:image" content={miniatura} />
+        <meta property="og:image:secure_url" content={miniatura} />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={tituloPreview} />
+        <meta property="og:locale" content="es_ES" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={tituloPreview} />
+        <meta name="twitter:image" content={miniatura} />
+
+        <!--
+           Las letras de los nombres (Cherolina, la gótica del periódico y
+           Cinzel) se sirven desde /fonts/ y se precargan: así no esperan
+           dos viajes a Google antes de dibujarse. El resto, en un solo
+           pedido.
+        -->
+        <link rel="preload" href="/fonts/Cherolina.ttf" as="font" type="font/ttf" crossorigin />
+        <link rel="preload" href="/fonts/DSFetteGotisch.ttf" as="font" type="font/ttf" crossorigin />
+        <link rel="preload" href="/fonts/Cinzel.woff2" as="font" type="font/woff2" crossorigin />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&family=Rozha+One&display=swap"
+            rel="stylesheet"
+        />
+
+        <style is:global>
+            @font-face {
+                font-family: "Cherolina";
+                src: url("/fonts/Cherolina.ttf") format("truetype");
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "DSFetteGotisch";
+                src: url("/fonts/DSFetteGotisch.ttf") format("truetype");
+                font-display: swap;
+            }
+            @font-face {
+                font-family: "Cinzel";
+                src: url("/fonts/Cinzel.woff2") format("woff2");
+                font-display: swap;
+            }
+
+            *,
+            *::before,
+            *::after {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html {
+                color-scheme: only light;
+                overflow-x: hidden;
+            }
+
+            /*
+               El blanco va como imagen y no como color: el modo oscuro
+               forzado de algunos celulares oscurece colores pero respeta
+               las imágenes.
+            */
+            body {
+                background-color: #fff;
+                background-image: linear-gradient(#fff, #fff);
+                color: #1b1a1c;
+                font-family: "Old Standard TT", serif;
+                font-size: 16px;
+                overflow-x: hidden;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* Mientras la portada del periódico está arriba no se baja */
+            body.periodico-abierto {
+                overflow: hidden;
+            }
+
+            img {
+                display: block;
+                max-width: 100%;
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            /* El ancho de contenido de la plantilla: 1140px en PC */
+            .caja {
+                width: 100%;
+                max-width: 1140px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
+    </head>
+    <body class="periodico-abierto">
+        <slot />
+    </body>
+</html>

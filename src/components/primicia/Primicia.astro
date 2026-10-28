@@ -1,0 +1,110 @@
+---
+// src/components/primicia/Primicia.astro
+// La invitación completa con el diseño "periódico", en orden de arriba a
+// abajo. La usan el index (sin pase) y /pase1, /pase2...
+import Periodico from "./Periodico.astro";
+import Portada from "./Portada.astro";
+import Bienvenida from "./Bienvenida.astro";
+import FechaContador from "./FechaContador.astro";
+import Mensaje from "./Mensaje.astro";
+import BotonMusica from "./BotonMusica.astro";
+import Padres from "./Padres.astro";
+import Itinerario from "./Itinerario.astro";
+import Lugares from "./Lugares.astro";
+import Cierre from "./Cierre.astro";
+import ModalConfirmar from "./ModalConfirmar.astro";
+
+export interface Props {
+    pases?: number;
+}
+const { pases = 0 } = Astro.props;
+---
+
+<Periodico />
+<main>
+    <Portada />
+    <Bienvenida pases={pases} />
+    <FechaContador />
+    <Mensaje />
+    <BotonMusica />
+    <Padres />
+    <Itinerario />
+    <Lugares />
+    <Cierre />
+</main>
+<ModalConfirmar />
+
+<style is:global>
+    /*
+       ── Animación de entrada, igual que la plantilla ──────────
+       Cada elemento marcado con data-entrada sube desde una altura igual
+       a la suya y aparece, por separado, cuando llega a la pantalla (el
+       "fadeInUp" de 1,25 s). La plantilla lo hace solo en celular; acá va
+       en todas las pantallas, a pedido.
+
+       Se esconden solo si hay JavaScript (la clase la pone el layout):
+       sin él, todo queda a la vista.
+    */
+    .con-js [data-entrada]:not(.entro) {
+        visibility: hidden;
+    }
+
+    [data-entrada].entro {
+        animation: subir-y-aparecer 1.25s both;
+    }
+
+    @keyframes subir-y-aparecer {
+        from {
+            opacity: 0;
+            transform: translate3d(0, 100%, 0);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /*
+       ── Íconos animados ───────────────────────────────────────
+       Todos los íconos llevan icono-sacudir: quedan siempre enteros, se
+       inclinan un poquito a izquierda y derecha cada vez menos, vuelven a
+       su lugar y esperan quietos antes de repetir. Suave y lento, sin
+       tirones, para que se vea delicado.
+    */
+    .icono-sacudir {
+        animation: sacudir 4.5s ease-in-out infinite;
+        transform-origin: 50% 60%;
+    }
+
+    @keyframes sacudir {
+        0%,
+        45%,
+        100% {
+            transform: rotate(0);
+        }
+        9% {
+            transform: rotate(-7deg);
+        }
+        20% {
+            transform: rotate(5deg);
+        }
+        31% {
+            transform: rotate(-2.5deg);
+        }
+        39% {
+            transform: rotate(1deg);
+        }
+    }
+</style>
+
+<script>
+    // Cada elemento se anima solo, la primera vez que entra a la pantalla
+    const observador = new IntersectionObserver((entradas) => {
+        for (const entrada of entradas) {
+            if (!entrada.isIntersecting) continue;
+            entrada.target.classList.add("entro");
+            observador.unobserve(entrada.target);
+        }
+    });
+    document.querySelectorAll("[data-entrada]").forEach((el) => observador.observe(el));
+</script>

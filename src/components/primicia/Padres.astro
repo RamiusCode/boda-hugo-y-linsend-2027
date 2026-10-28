@@ -1,0 +1,163 @@
+---
+// src/components/primicia/Padres.astro
+// Los padres a la izquierda; a la derecha la "exclusiva" con las fotos
+// que pasan solas. En celular va uno debajo del otro.
+import { padresNovia, padresNovio, fotos } from "../../datos/boda";
+import Galeria from "./Galeria.astro";
+
+const grupos = [
+    { titulo: "Padres de la Novia", nombres: padresNovia, icono: "/imagenes/padresnovia.png" },
+    { titulo: "Padres del Novio", nombres: padresNovio, icono: "/imagenes/padresnovio.png" },
+];
+---
+
+<section class="padres">
+    <div class="columna columna-padres">
+        <div class="banda"><p data-entrada>Con la bendición de Dios y de Nuestros Padres</p></div>
+
+        <div class="grupos">
+            {
+                grupos.map((grupo) => (
+                    <div class="grupo" data-entrada>
+                        <img class="icono-linea icono-sacudir" src={grupo.icono} alt="" loading="lazy" />
+                        <h3 class="titulo-grupo">{grupo.titulo}</h3>
+                        <p class="nombres" data-entrada>
+                            {grupo.nombres.map((nombre) => (
+                                <span class="block">{nombre}</span>
+                            ))}
+                        </p>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+
+    <div class="columna columna-exclusiva">
+        <div class="banda banda-gris">
+            <p data-entrada>exclusiva: Dos Almas, una bendición y un gran «sí»</p>
+        </div>
+        <div class="recuadro-galeria">
+            <Galeria fotos={fotos.exclusiva} />
+        </div>
+    </div>
+</section>
+
+<style>
+    .padres {
+        display: flex;
+        justify-content: center;
+        padding: 0 10px;
+    }
+
+    .columna {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 570px;
+        min-width: 0;
+        padding: 10px;
+    }
+
+    .banda {
+        padding: 10px;
+        background-color: #000;
+        color: #fff;
+        font-size: 16px;
+        line-height: 19.2px;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .banda-gris {
+        background-color: #1b1a1c;
+    }
+
+    .grupos {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 55px;
+        padding: 10px;
+    }
+
+    .grupo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .icono-linea {
+        width: 89px;
+        height: 89px;
+        margin-bottom: 8px;
+        object-fit: contain;
+    }
+
+    .titulo-grupo {
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 36px;
+        color: #000;
+    }
+
+    .nombres {
+        font-size: 18px;
+        line-height: 21.6px;
+        color: #1b1a1c;
+    }
+
+    .block {
+        display: block;
+    }
+
+    .recuadro-galeria {
+        position: relative;
+        min-height: 652px;
+    }
+
+    @media (max-width: 1024px) {
+        .columna-padres {
+            width: 58.6%;
+        }
+
+        .columna-exclusiva {
+            width: 41.4%;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .padres {
+            flex-direction: column;
+        }
+
+        .columna-padres,
+        .columna-exclusiva {
+            width: 100%;
+        }
+
+        .banda {
+            line-height: 24px;
+        }
+
+        .icono-linea {
+            width: 50px;
+            height: 50px;
+        }
+
+        .titulo-grupo {
+            font-size: 25px;
+            line-height: 25px;
+        }
+
+        .nombres {
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        .recuadro-galeria {
+            min-height: 437px;
+        }
+    }
+</style>

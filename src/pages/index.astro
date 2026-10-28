@@ -1,0 +1,14 @@
+---
+// src/pages/index.astro
+// La invitación SIN pase en la ruta: el nombre y los pases se ponen en el
+// link (?n=2&m=Daniel Martinez). Sin ellos, la tarjeta dice "Invitado" y
+// "Sin pases".
+//
+// Las que llevan pase viven todas en pase[cantidad].astro: /pase1, /pase2...
+import LayoutPrimicia from "../layouts/LayoutPrimicia.astro";
+import Primicia from "../components/primicia/Primicia.astro";
+---
+
+<LayoutPrimicia title="Hugo & Linsend | 21 de Enero 2027">
+    <Primicia />
+</LayoutPrimicia>

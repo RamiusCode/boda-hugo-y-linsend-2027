@@ -1,0 +1,329 @@
+---
+// src/components/primicia/ModalConfirmar.astro
+// La ventana que abre el botón "Confirmar": saluda al invitado por su
+// nombre y pregunta si asiste o no. Los pases no se repiten acá: ya están
+// en la tarjeta del invitado.
+//
+// El nombre se lee de esa tarjeta (Bienvenida), así siempre coincide con
+// lo que dice el link.
+//
+// PENDIENTE: por ahora es solo el diseño. La respuesta se guarda en el
+// navegador del invitado para mostrar el estado "ya respondió"; cuando
+// se conecte al sistema de invitados, se envía desde enviarRespuesta()
+// y el estado se lee de ahí.
+---
+
+<div id="modal-confirmar" class="fondo" hidden>
+    <div class="ventana" role="dialog" aria-modal="true" aria-labelledby="titulo-modal">
+        <button class="cerrar" type="button" data-cerrar aria-label="Cerrar">&times;</button>
+
+        <p id="titulo-modal" class="banda">Confirmar asistencia</p>
+
+        <!-- Paso 1: la pregunta -->
+        <div class="paso" data-paso="pregunta">
+            <p class="nombre" data-nombre></p>
+            <p class="dedicatoria">Será un honor celebrar este día a tu lado.</p>
+
+            <span class="linea" aria-hidden="true"></span>
+
+            <p class="pregunta">¿Nos acompañarás en este día tan especial?</p>
+            <button class="boton boton-si" type="button" data-responder="si">Confirmo mi asistencia</button>
+            <button class="boton boton-no" type="button" data-responder="no">No podré asistir</button>
+        </div>
+
+        <!-- Paso 2: la respuesta quedó guardada -->
+        <div class="paso" data-paso="si" hidden>
+            <svg class="sello" viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="32" r="29" />
+                <path d="M19 33l9 9 17-19" />
+            </svg>
+            <p class="nombre" data-nombre></p>
+            <p class="mensaje">¡Gracias! Ya confirmaste tu asistencia.</p>
+            <p class="chico">Te esperamos con mucho cariño.</p>
+            <button class="boton boton-si" type="button" data-cerrar>Cerrar</button>
+        </div>
+
+        <div class="paso" data-paso="no" hidden>
+            <svg class="sello" viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="32" r="29" />
+                <path d="M32 46s-14-8.5-14-18a7.5 7.5 0 0 1 14-3.7A7.5 7.5 0 0 1 46 28c0 9.5-14 18-14 18z" />
+            </svg>
+            <p class="nombre" data-nombre></p>
+            <p class="mensaje">Gracias por avisarnos.</p>
+            <p class="chico">Te vamos a extrañar en este día tan especial.</p>
+            <button class="boton boton-si" type="button" data-cerrar>Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fondo {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.6);
+        overscroll-behavior: contain;
+        touch-action: none;
+        animation: aparecer-fondo 0.3s ease both;
+    }
+
+    .fondo[hidden] {
+        display: none;
+    }
+
+    .ventana {
+        position: relative;
+        width: 100%;
+        max-width: 420px;
+        max-height: 100%;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+        padding: 10px;
+        border: 3px double #000;
+        background-color: #fff;
+        background-image: linear-gradient(#fff, #fff);
+        color: #1b1a1c;
+        text-align: center;
+        animation: subir-ventana 0.45s ease both;
+    }
+
+    .cerrar {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        border: 0;
+        background: none;
+        color: #fff;
+        font-size: 28px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .banda {
+        padding: 12px 40px;
+        background-color: #000;
+        color: #fff;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 18px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .paso {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 24px 14px 14px;
+    }
+
+    .paso[hidden] {
+        display: none;
+    }
+
+    .chico {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .nombre {
+        font-family: "Cinzel", serif;
+        font-size: 28px;
+        line-height: 1.1;
+        color: #000;
+        overflow-wrap: break-word;
+    }
+
+    .dedicatoria {
+        margin-top: 4px;
+        font-size: 17px;
+        font-style: italic;
+        line-height: 23px;
+    }
+
+    .linea {
+        width: 60%;
+        margin: 14px 0 8px;
+        border-top: 1px solid #000;
+    }
+
+    .pregunta,
+    .mensaje {
+        margin-bottom: 10px;
+        font-size: 18px;
+        line-height: 24px;
+        color: #000;
+    }
+
+    .mensaje {
+        margin: 6px 0 0;
+        font-weight: 700;
+    }
+
+    .boton {
+        width: 100%;
+        margin-top: 8px;
+        padding: 16px 20px;
+        border: 2px solid #000;
+        border-radius: 3px;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 18px;
+        line-height: 18px;
+        cursor: pointer;
+    }
+
+    .boton-si {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .boton-no {
+        background-color: #fff;
+        color: #000;
+    }
+
+    .boton:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+
+    .sello {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 8px;
+        fill: none;
+        stroke: #000;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    @keyframes aparecer-fondo {
+        from {
+            opacity: 0;
+        }
+    }
+
+    @keyframes subir-ventana {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+    }
+</style>
+
+<script>
+    const modal = document.getElementById("modal-confirmar")!;
+    const abrir = document.getElementById("abrir-confirmar")!;
+    const aviso = document.getElementById("ya-respondio")!;
+
+    // Lo que dice la tarjeta del invitado, que ya leyó el link
+    const nombre = () => document.getElementById("nombre-invitado")?.textContent?.trim() ?? "";
+
+    type Respuesta = "si" | "no";
+    const clave = () => `respuesta-boda:${nombre()}`;
+
+    const AVISOS: Record<Respuesta, string> = {
+        si: "Ya confirmaste tu asistencia. ¡Te esperamos!",
+        no: "Ya nos avisaste que no podrás asistir. ¡Gracias!",
+    };
+
+    function leerRespuesta(): Respuesta | null {
+        try {
+            const valor = localStorage.getItem(clave());
+            return valor === "si" || valor === "no" ? valor : null;
+        } catch {
+            return null;
+        }
+    }
+
+    // PENDIENTE: acá se envía la respuesta al sistema de invitados
+    async function enviarRespuesta(respuesta: Respuesta) {
+        try {
+            localStorage.setItem(clave(), respuesta);
+        } catch {
+            // Sin almacenamiento la ventana igual muestra el agradecimiento
+        }
+    }
+
+    function mostrarPaso(paso: "pregunta" | Respuesta) {
+        modal.querySelectorAll<HTMLElement>("[data-paso]").forEach((el) => {
+            el.hidden = el.dataset.paso !== paso;
+        });
+    }
+
+    // Cambia el botón "Confirmar" por el aviso de que ya respondió
+    function marcarRespondido(respuesta: Respuesta) {
+        abrir.hidden = true;
+        aviso.textContent = AVISOS[respuesta];
+        aviso.hidden = false;
+    }
+
+    function abrirModal() {
+        modal.querySelectorAll("[data-nombre]").forEach((el) => (el.textContent = nombre()));
+        mostrarPaso("pregunta");
+        modal.hidden = false;
+        trabarFondo();
+    }
+
+    function cerrarModal() {
+        modal.hidden = true;
+        destrabarFondo();
+    }
+
+    /*
+       Con la ventana abierta, la invitación de atrás no se mueve. No
+       alcanza con overflow: hidden (en iPhone se sigue deslizando): el
+       body se fija en el lugar donde estaba y al cerrar se vuelve ahí.
+    */
+    let posicion = 0;
+
+    function trabarFondo() {
+        posicion = window.scrollY;
+        Object.assign(document.body.style, {
+            position: "fixed",
+            top: `-${posicion}px`,
+            left: "0",
+            right: "0",
+            overflow: "hidden",
+        });
+    }
+
+    function destrabarFondo() {
+        Object.assign(document.body.style, { position: "", top: "", left: "", right: "", overflow: "" });
+        window.scrollTo({ top: posicion, behavior: "instant" as ScrollBehavior });
+    }
+
+    abrir.addEventListener("click", abrirModal);
+    modal.querySelectorAll("[data-cerrar]").forEach((b) => b.addEventListener("click", cerrarModal));
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) cerrarModal();
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !modal.hidden) cerrarModal();
+    });
+
+    modal.querySelectorAll<HTMLButtonElement>("[data-responder]").forEach((boton) => {
+        boton.addEventListener("click", async () => {
+            const respuesta = boton.dataset.responder as Respuesta;
+            const botones = modal.querySelectorAll<HTMLButtonElement>("[data-responder]");
+            botones.forEach((b) => (b.disabled = true));
+            await enviarRespuesta(respuesta);
+            botones.forEach((b) => (b.disabled = false));
+            mostrarPaso(respuesta);
+            marcarRespondido(respuesta);
+        });
+    });
+
+    // Si ya había respondido antes, el botón no vuelve a aparecer. Espera
+    // un turno para que la tarjeta del invitado ya tenga el nombre del link.
+    setTimeout(() => {
+        const previa = leerRespuesta();
+        if (previa) marcarRespondido(previa);
+    });
+</script>

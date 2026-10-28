@@ -1,0 +1,91 @@
+---
+// src/components/primicia/Mensaje.astro
+// Foto de los novios y, al costado, su mensaje con las comillas.
+import { fotos, mensajeNovios, novio, novia } from "../../datos/boda";
+---
+
+<section class="caja mensaje" data-entrada>
+    <div class="columna columna-foto">
+        <img src={fotos.mensaje} alt={`${novio} y ${novia}`} loading="lazy" />
+    </div>
+
+    <div class="columna columna-texto">
+        <svg class="comillas" viewBox="0 0 448 512" aria-hidden="true">
+            <path d="M448 296c0 66.3-53.7 120-120 120h-8c-17.7 0-32-14.3-32-32s14.3-32 32-32h8c30.9 0 56-25.1 56-56v-8H320c-35.3 0-64-28.7-64-64V160c0-35.3 28.7-64 64-64h64c35.3 0 64 28.7 64 64v32 32 72zm-256 0c0 66.3-53.7 120-120 120H64c-17.7 0-32-14.3-32-32s14.3-32 32-32h8c30.9 0 56-25.1 56-56v-8H64c-35.3 0-64-28.7-64-64V160c0-35.3 28.7-64 64-64h64c35.3 0 64 28.7 64 64v32 32 72z"></path>
+        </svg>
+        <h2 class="titulo" data-entrada>Mensaje de los novios</h2>
+        <p class="texto" data-entrada>
+            {mensajeNovios.map((linea, i) => <>{i > 0 && <br />}{linea}</>)}
+        </p>
+    </div>
+</section>
+
+<style>
+    .mensaje {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 10px 10px 60px;
+    }
+
+    .columna {
+        flex: 1 1 50%;
+        min-width: 0;
+        padding: 10px;
+    }
+
+    .columna-foto img {
+        width: 100%;
+        height: auto;
+    }
+
+    .columna-texto {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+        color: #1b1a1c;
+    }
+
+    .comillas {
+        width: 30px;
+        height: 30px;
+        fill: #000;
+    }
+
+    .titulo {
+        font-size: 25px;
+        font-weight: 400;
+        line-height: 30px;
+    }
+
+    .texto {
+        font-size: 18px;
+        line-height: 21.6px;
+        text-align: justify;
+    }
+
+    @media (max-width: 767px) {
+        .mensaje {
+            flex-direction: column;
+            gap: 0;
+            padding: 0;
+        }
+
+        .columna-texto {
+            align-items: center;
+            text-align: center;
+        }
+
+        .titulo {
+            font-size: 30px;
+            line-height: 34px;
+        }
+
+        .texto {
+            font-size: 16px;
+            line-height: 17px;
+            text-align: center;
+        }
+    }
+</style>

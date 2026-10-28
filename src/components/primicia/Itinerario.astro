@@ -1,0 +1,283 @@
+---
+// src/components/primicia/Itinerario.astro
+// La línea de tiempo con los momentos alternados a cada lado, y debajo el
+// código de vestimenta.
+import { cronograma, vestimenta } from "../../datos/boda";
+
+// El primero va a la derecha y el segundo a la izquierda, un poco más
+// abajo; así se van intercalando.
+const derecha = cronograma.filter((_, i) => i % 2 === 0);
+const izquierda = cronograma.filter((_, i) => i % 2 === 1);
+---
+
+<section class="itinerario">
+    <h2 class="titulo">Itinerario</h2>
+
+    <div class="linea-tiempo">
+        <div class="lado lado-izq">
+            <div class="desfase" aria-hidden="true"></div>
+            {
+                izquierda.map((momento) => (
+                    <div class="momento">
+                        <img class="icono icono-sacudir" src={`/iconos/${momento.icono}.png`} alt="" loading="lazy" />
+                        <p class="nombre" data-entrada>{momento.nombre}</p>
+                        <span class="raya" />
+                        <p class="hora" data-entrada>{momento.hora} h</p>
+                    </div>
+                ))
+            }
+        </div>
+
+        <div class="eje" aria-hidden="true">
+            <span class="punto"></span>
+            <span class="punto"></span>
+        </div>
+
+        <div class="lado lado-der">
+            {
+                derecha.map((momento) => (
+                    <div class="momento">
+                        <img class="icono icono-sacudir" src={`/iconos/${momento.icono}.png`} alt="" loading="lazy" />
+                        <p class="nombre" data-entrada>{momento.nombre}</p>
+                        <span class="raya" />
+                        <p class="hora" data-entrada>{momento.hora} h</p>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+
+    <div class="vestimenta">
+        <div class="iconos-vestimenta">
+            <img class="icono-sacudir" src="/iconos/vestido-de-novia.png" alt="" loading="lazy" />
+        </div>
+        <div class="texto-vestimenta" data-entrada>
+            <h2 class="titulo-vestimenta">Código de Vestimenta</h2>
+            <p class="detalle" data-entrada>
+                Para este día tan especial, se ha elegido un estilo: <strong>{vestimenta.estilo}.</strong>
+            </p>
+        </div>
+    </div>
+</section>
+
+<style>
+    .itinerario {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 25px 10px 0;
+    }
+
+    .titulo {
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 30px;
+        color: #000;
+    }
+
+    .linea-tiempo {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        max-width: 1140px;
+        padding: 10px;
+    }
+
+    .lado {
+        display: flex;
+        flex-direction: column;
+        width: 150px;
+    }
+
+    .desfase {
+        min-height: 75px;
+    }
+
+    .momento {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 200px;
+        text-align: center;
+        color: #1b1a1c;
+    }
+
+    .icono {
+        align-self: center;
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
+
+    .nombre {
+        font-size: 18px;
+        line-height: 21.6px;
+    }
+
+    .raya {
+        display: block;
+        width: 100%;
+        max-width: 180px;
+        margin: 7px 0;
+        border-top: 1.5px dashed #6c7563;
+    }
+
+    .hora {
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    .eje {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 2px;
+        background-color: #6c7563;
+    }
+
+    .punto {
+        width: 10px;
+        height: 10px;
+        flex: none;
+        border-radius: 50%;
+        background-color: #6c7563;
+    }
+
+    .punto:first-child {
+        margin-top: -5px;
+    }
+
+    .punto:last-child {
+        margin-bottom: -5px;
+    }
+
+    /* ── Vestimenta ────────────────────────────────────────── */
+    .vestimenta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+        max-width: 1140px;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .iconos-vestimenta {
+        padding: 10px;
+    }
+
+    .iconos-vestimenta img {
+        width: 97px;
+        height: 97px;
+        object-fit: contain;
+    }
+
+    .texto-vestimenta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .titulo-vestimenta {
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 30px;
+        color: #000;
+    }
+
+    .detalle {
+        font-size: 18px;
+        line-height: 21.6px;
+        color: #1b1a1c;
+    }
+
+    /* En tablet la plantilla pone el título y el texto lado a lado */
+    @media (min-width: 768px) and (max-width: 1024px) {
+        .texto-vestimenta {
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .titulo-vestimenta {
+            width: 201px;
+            flex: none;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .titulo {
+            font-size: 22px;
+            line-height: 21px;
+        }
+
+        .lado {
+            flex: 1;
+            width: auto;
+            min-width: 0;
+        }
+
+        .desfase {
+            min-height: 50px;
+        }
+
+        .momento {
+            min-height: 160px;
+            margin-top: 10px;
+        }
+
+        .icono {
+            width: 45px;
+            height: 45px;
+        }
+
+        .nombre,
+        .hora {
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        .raya {
+            margin: 4px 0;
+        }
+
+        .eje {
+            width: 1px;
+        }
+
+        .punto {
+            width: 7px;
+            height: 7px;
+        }
+
+        .vestimenta {
+            gap: 0;
+            margin-top: 17px;
+        }
+
+        .iconos-vestimenta img {
+            width: 58px;
+            height: 58px;
+        }
+
+        .texto-vestimenta {
+            gap: 6px;
+            padding: 0;
+        }
+
+        .titulo-vestimenta {
+            font-size: 25px;
+            line-height: 25px;
+        }
+
+        .detalle {
+            font-size: 16px;
+            line-height: 22px;
+        }
+    }
+</style>

@@ -1,0 +1,283 @@
+---
+// src/components/primicia/Cierre.astro
+// La carta a la familia, la confirmación de asistencia y el regalo en una
+// columna; al lado, la segunda tanda de fotos que pasan solas.
+//
+// El botón "Confirmar" abre ModalConfirmar (va en Primicia, fuera de las
+// secciones). Cuando el invitado ya respondió, el botón se cambia por el
+// aviso de .ya-respondio.
+import { cartaFamilia, regalo, fotos } from "../../datos/boda";
+import Galeria from "./Galeria.astro";
+---
+
+<section class="caja cierre">
+    <div class="columna">
+        <div class="carta">
+            <h2 class="titulo-carta" data-entrada>{cartaFamilia.titulo}</h2>
+            <p class="texto" data-entrada>{cartaFamilia.texto}</p>
+        </div>
+
+        <div class="recuadro">
+            <h2 class="titulo-recuadro">CONFIRMAR ASISTENCIA</h2>
+            <img class="icono icono-sacudir" src="/iconos/reserva.png" alt="" loading="lazy" />
+            <p class="texto" data-entrada>Es importante para nosotros que puedas confirmar tu asistencia.</p>
+            <button id="abrir-confirmar" class="boton latido" type="button">Confirmar</button>
+            <p id="ya-respondio" class="ya-respondio" hidden></p>
+        </div>
+
+        <div class="recuadro">
+            <h2 class="titulo-recuadro">SUGERENCIA DE REGALO</h2>
+            <img class="icono icono-sacudir" src="/iconos/lluvia-sobre.png" alt="" loading="lazy" />
+            {regalo.texto.map((parrafo) => <p class="texto" data-entrada>{parrafo}</p>)}
+            <img class="qr" src={regalo.qr} alt="Código QR para transferencia" loading="lazy" />
+            <div class="cuenta">
+                <p><strong>Titular:</strong> {regalo.titular}</p>
+                <p>
+                    <strong>Cuenta Destino:</strong> <span id="numero-cuenta">{regalo.cuenta}</span>
+                    <button class="copiar" type="button" data-copiar="numero-cuenta" aria-label="Copiar número de cuenta">
+                        <svg viewBox="0 0 448 512" class="ic-copiar" aria-hidden="true">
+                            <path d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z"></path>
+                        </svg>
+                        <svg viewBox="0 0 448 512" class="ic-listo" aria-hidden="true">
+                            <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"></path>
+                        </svg>
+                    </button>
+                </p>
+                <p><strong>Concepto:</strong> {regalo.concepto}</p>
+            </div>
+            <p class="texto centrado" data-entrada>Gracias por su muestra de cariño.</p>
+        </div>
+    </div>
+
+    <div class="columna-fotos">
+        <Galeria fotos={fotos.cierre} />
+    </div>
+</section>
+
+<style>
+    .cierre {
+        display: flex;
+        gap: 20px;
+        padding: 0 10px;
+    }
+
+    .columna {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 25.3%;
+        flex: none;
+        padding: 10px;
+    }
+
+    .columna-fotos {
+        position: relative;
+        flex: 1;
+        min-height: 408px;
+    }
+
+    .carta {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .titulo-carta {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 30px;
+        font-weight: 900;
+        line-height: 27.2px;
+        color: #000;
+    }
+
+    .texto {
+        font-size: 18px;
+        line-height: 21.6px;
+        color: #1b1a1c;
+    }
+
+    .centrado {
+        text-align: center;
+    }
+
+    .recuadro {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 10px;
+        border: 2px solid #000;
+    }
+
+    .titulo-recuadro {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 30px;
+        text-align: center;
+        color: #000;
+    }
+
+    .icono {
+        align-self: center;
+        width: 80px;
+        height: 80px;
+        margin: 14px 0;
+        object-fit: contain;
+    }
+
+    .boton {
+        display: block;
+        width: 100%;
+        cursor: pointer;
+        padding: 20px;
+        border: 2px solid #000;
+        border-radius: 3px;
+        background-color: #000;
+        color: #fff;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 18px;
+        font-weight: 300;
+        line-height: 18px;
+        text-align: center;
+    }
+
+    .latido {
+        animation: latido 2s ease-in-out infinite;
+    }
+
+    @keyframes latido {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    /* Reemplaza al botón cuando el invitado ya respondió */
+    .boton[hidden],
+    .ya-respondio[hidden] {
+        display: none;
+    }
+
+    .ya-respondio {
+        padding: 16px 10px;
+        border: 1px solid #000;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 17px;
+        line-height: 22px;
+        text-align: center;
+        color: #000;
+    }
+
+    .qr {
+        align-self: center;
+        width: 65%;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.21);
+    }
+
+    .cuenta {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 16px;
+        line-height: 27.2px;
+        text-align: center;
+        color: #000;
+    }
+
+    .copiar {
+        display: inline-flex;
+        vertical-align: -2px;
+        margin-left: 8px;
+        padding: 0;
+        border: 0;
+        background: none;
+        cursor: pointer;
+    }
+
+    .copiar svg {
+        width: 14px;
+        height: 16px;
+        fill: #000;
+    }
+
+    .ic-listo,
+    .copiar.listo .ic-copiar {
+        display: none;
+    }
+
+    .copiar.listo .ic-listo {
+        display: block;
+    }
+
+    @media (max-width: 1024px) {
+        .columna {
+            width: 32.4%;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .cierre {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .columna {
+            width: 100%;
+        }
+
+        .columna-fotos {
+            min-height: 472px;
+            margin-bottom: 10px;
+        }
+
+        .carta {
+            padding: 0;
+            text-align: center;
+        }
+
+        .titulo-carta {
+            font-size: 25px;
+            line-height: 29px;
+        }
+
+        .texto {
+            font-size: 16px;
+            line-height: 22px;
+            text-align: center;
+        }
+
+        .titulo-recuadro {
+            font-size: 21px;
+            line-height: 24px;
+        }
+
+        .icono {
+            width: 58px;
+            height: 58px;
+            margin: 7px 0;
+        }
+
+        .boton {
+            border-radius: 0;
+        }
+
+        .qr {
+            width: 136px;
+            border-radius: 16px;
+        }
+    }
+</style>
+
+<script>
+    document.querySelectorAll<HTMLButtonElement>("[data-copiar]").forEach((boton) => {
+        boton.addEventListener("click", () => {
+            const texto = document.getElementById(boton.dataset.copiar ?? "")?.innerText ?? "";
+            navigator.clipboard?.writeText(texto).then(() => {
+                boton.classList.add("listo");
+                setTimeout(() => boton.classList.remove("listo"), 1500);
+            });
+        });
+    });
+</script>
