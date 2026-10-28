@@ -37,16 +37,16 @@ import { ceremonia, recepcion, soloAdultos } from "../../datos/boda";
             </div>
         </article>
 
-        <!-- Recepción: el título va en la columna del texto -->
-        <article class="tarjeta tarjeta-arriba" data-entrada>
+        <!-- Recepción: igual que la ceremonia, el salón va en la banda -->
+        <article class="tarjeta" data-entrada>
             <div class="col-foto">
+                <div class="banda"><p data-entrada>{recepcion.lugar}</p></div>
                 <div class="foto" style={`--foto:url('${recepcion.foto}')`}></div>
             </div>
             <div class="col-texto">
-                <h3 class="subtitulo" data-entrada>{recepcion.titulo}</h3>
                 <p class="detalle" data-entrada>
-                    <strong>| {recepcion.hora} | {recepcion.lugar}</strong>
-                    <span class="block">{recepcion.direccion}</span>
+                    <strong>| {recepcion.hora} | {recepcion.titulo},</strong>
+                    <span class="block">{recepcion.lugar}. {recepcion.direccion}</span>
                 </p>
                 <a class="boton" data-entrada href={recepcion.mapa} target="_blank" rel="noopener noreferrer">
                     Ver ubicación
@@ -120,10 +120,6 @@ import { ceremonia, recepcion, soloAdultos } from "../../datos/boda";
         border: 3px solid #1b1a1c;
     }
 
-    .tarjeta-arriba {
-        align-items: flex-start;
-    }
-
     .col-foto {
         display: flex;
         flex-direction: column;
@@ -146,14 +142,6 @@ import { ceremonia, recepcion, soloAdultos } from "../../datos/boda";
         gap: 20px;
         min-width: 0;
         padding: 10px;
-    }
-
-    .subtitulo {
-        font-family: "Times New Roman", Times, serif;
-        font-size: 30px;
-        font-weight: 700;
-        line-height: 27.2px;
-        color: #000;
     }
 
     .detalle {
@@ -229,12 +217,6 @@ import { ceremonia, recepcion, soloAdultos } from "../../datos/boda";
 
         .foto {
             min-height: 200px;
-        }
-
-        .subtitulo {
-            font-size: 25px;
-            line-height: 29px;
-            text-align: center;
         }
 
         .detalle {
