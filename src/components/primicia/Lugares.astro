@@ -20,16 +20,16 @@ import { ceremonia, recepcion, soloAdultos } from "../../datos/boda";
             <path d="M40 66h10" />
         </svg>
 
-        <!-- Ceremonia: el nombre del lugar va en la banda sobre la foto -->
+        <!-- Ceremonia: el título va en la banda sobre la foto y el lugar con la hora -->
         <article class="tarjeta" data-entrada>
             <div class="col-foto">
-                <div class="banda"><p data-entrada>{ceremonia.lugar}</p></div>
+                <div class="banda"><p data-entrada>{ceremonia.titulo}</p></div>
                 <div class="foto" style={`--foto:url('${ceremonia.foto}')`}></div>
             </div>
             <div class="col-texto">
                 <p class="detalle" data-entrada>
-                    <strong>| {ceremonia.hora} | {ceremonia.titulo},</strong>
-                    <span class="block">{ceremonia.lugar}. {ceremonia.direccion}</span>
+                    <strong>| {ceremonia.hora} | {ceremonia.lugar}</strong>
+                    <span class="block">{ceremonia.direccion}</span>
                 </p>
                 <a class="boton" data-entrada href={ceremonia.mapa} target="_blank" rel="noopener noreferrer">
                     Ver ubicación
