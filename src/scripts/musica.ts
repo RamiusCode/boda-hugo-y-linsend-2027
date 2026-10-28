@@ -32,3 +32,8 @@ export function alternar(): boolean {
     a.pause();
     return false;
 }
+
+/** Corta la música si estaba sonando (la usa la pantalla de link borrado). */
+export function pausar() {
+    audio?.pause();
+}

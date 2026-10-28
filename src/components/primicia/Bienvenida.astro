@@ -2,11 +2,13 @@
 // src/components/primicia/Bienvenida.astro
 // El recuadro negro de bienvenida con la tarjeta del invitado.
 //
-// Igual que la plantilla, el nombre y los pases vienen en el link:
-//     ?n=2 pases&m=Daniel Martinez
-// m es el nombre y n los pases; si n es solo un número (?n=2) se le
-// agrega "pases". Si el link no trae n, valen los pases de /pase1,
-// /pase2...; y si tampoco hay, dice "Sin pases".
+// El nombre y los pases salen del panel de invitados: cada invitado tiene
+// su link con un código (?i=k7m2p) y la tarjeta se completa con lo que los
+// novios cargaron. Si lo corrigen con la página abierta, se actualiza sola.
+//
+// Links sin código: siguen valiendo ?m=Nombre&n=2 (m el nombre, n los
+// pases). Si no hay nada, valen los pases de /pase1, /pase2...; y si
+// tampoco, dice "Invitado" y "Sin pases".
 import { textoPases } from "../../datos/boda";
 
 export interface Props {
@@ -23,9 +25,9 @@ const pasesIniciales = pases > 0 ? textoPases(pases) : "Sin pases";
     <div class="tarjeta">
         <!-- El nombre baja de renglón si no entra: no se achica -->
         <p id="nombre-invitado" class="grande">Invitado</p>
-        <p class="chico" data-entrada>Hemos reservado:</p>
+        <p id="texto-pase-antes" class="chico" data-entrada>Hemos reservado:</p>
         <p id="pases-invitado" class="grande">{pasesIniciales}</p>
-        <p class="chico" data-entrada>en su honor</p>
+        <p id="texto-pase-despues" class="chico" data-entrada>en su honor</p>
     </div>
 
     <!-- La flecha que apunta hacia abajo al terminar el recuadro -->
@@ -129,17 +131,43 @@ const pasesIniciales = pases > 0 ? textoPases(pases) : "Sin pases";
 
 <script>
     import { textoPases } from "../../datos/boda";
-
-    // ?n=2 pases&m=Daniel Martinez — m es el nombre, n los pases
-    const parametros = new URLSearchParams(window.location.search);
-    const nombre = parametros.get("m")?.trim();
-    const pases = parametros.get("n")?.trim();
+    import { codigoDelLink, datosInvitado, alCambiarInvitado, type Invitado } from "../../lib/invitado";
 
     const destinoNombre = document.getElementById("nombre-invitado");
     const destinoPases = document.getElementById("pases-invitado");
-    if (nombre && destinoNombre) destinoNombre.textContent = nombre;
-    if (pases && destinoPases) {
-        // Un número suelto se completa con la palabra: 2 → "2 pases"
-        destinoPases.textContent = /^\d+$/.test(pases) ? textoPases(Number(pases)) : pases;
+
+    // ── Links sin código: ?m=Daniel Martinez&n=2 ─────────────────
+    if (!codigoDelLink()) {
+        const parametros = new URLSearchParams(window.location.search);
+        const nombre = parametros.get("m")?.trim();
+        const pases = parametros.get("n")?.trim();
+        if (nombre && destinoNombre) destinoNombre.textContent = nombre;
+        if (pases && destinoPases) {
+            // Un número suelto se completa con la palabra: 2 → "2 pases"
+            destinoPases.textContent = /^\d+$/.test(pases) ? textoPases(Number(pases)) : pases;
+        }
     }
+
+    // ── Con código: lo que cargaron los novios en el panel ───────
+    // Las tres líneas de los pases ("Hemos reservado: / 2 pases / en su
+    // honor") se esconden juntas si la boda no tiene pases contratados.
+    const lineasPases = ["texto-pase-antes", "pases-invitado", "texto-pase-despues"];
+
+    function mostrar(inv: Invitado | null) {
+        if (!inv) return;
+        if (inv.nombre && destinoNombre) destinoNombre.textContent = inv.nombre;
+
+        const funciones = (inv.funciones ?? {}) as Record<string, boolean | undefined>;
+        const conPases = funciones.pases !== false;
+        for (const id of lineasPases) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = conPases ? "" : "none";
+        }
+        if (conPases && destinoPases && Number.isInteger(inv.pases) && inv.pases > 0) {
+            destinoPases.textContent = textoPases(inv.pases);
+        }
+    }
+
+    datosInvitado().then(mostrar);
+    alCambiarInvitado(mostrar);
 </script>

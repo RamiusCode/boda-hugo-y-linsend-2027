@@ -13,6 +13,8 @@ import Itinerario from "./Itinerario.astro";
 import Lugares from "./Lugares.astro";
 import Cierre from "./Cierre.astro";
 import ModalConfirmar from "./ModalConfirmar.astro";
+// Tapa la invitación si los novios borraron al invitado del link
+import LinkNoDisponible from "../LinkNoDisponible.astro";
 
 export interface Props {
     pases?: number;
@@ -20,6 +22,7 @@ export interface Props {
 const { pases = 0 } = Astro.props;
 ---
 
+<LinkNoDisponible />
 <Periodico />
 <main>
     <Portada />

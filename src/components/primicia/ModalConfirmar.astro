@@ -7,10 +7,13 @@
 // El nombre se lee de esa tarjeta (Bienvenida), así siempre coincide con
 // lo que dice el link.
 //
-// PENDIENTE: por ahora es solo el diseño. La respuesta se guarda en el
-// navegador del invitado para mostrar el estado "ya respondió"; cuando
-// se conecte al sistema de invitados, se envía desde enviarRespuesta()
-// y el estado se lee de ahí.
+// La respuesta va al panel de invitados, a la fila del invitado del link
+// (?i=k7m2p): nadie puede confirmar por otro. El estado "ya respondió" se
+// lee de ahí también, así que se respeta en cualquier celular y, si los
+// novios le borran la respuesta desde el panel, el botón vuelve solo.
+//
+// Sin código en el link (la invitación genérica) no hay a quién anotarle
+// la respuesta: la ventana igual agradece, pero no queda guardada.
 ---
 
 <div id="modal-confirmar" class="fondo" hidden>
@@ -218,37 +221,52 @@
 </style>
 
 <script>
+    import {
+        codigoDelLink,
+        datosInvitado,
+        confirmarAsistencia,
+        alCambiarInvitado,
+        type Invitado,
+    } from "../../lib/invitado";
+
     const modal = document.getElementById("modal-confirmar")!;
     const abrir = document.getElementById("abrir-confirmar")!;
     const aviso = document.getElementById("ya-respondio")!;
 
-    // Lo que dice la tarjeta del invitado, que ya leyó el link
+    // Lo que dice la tarjeta del invitado, que ya trae el nombre del panel
     const nombre = () => document.getElementById("nombre-invitado")?.textContent?.trim() ?? "";
 
     type Respuesta = "si" | "no";
-    const clave = () => `respuesta-boda:${nombre()}`;
 
     const AVISOS: Record<Respuesta, string> = {
         si: "Ya confirmaste tu asistencia. ¡Te esperamos!",
         no: "Ya nos avisaste que no podrás asistir. ¡Gracias!",
     };
 
-    function leerRespuesta(): Respuesta | null {
-        try {
-            const valor = localStorage.getItem(clave());
-            return valor === "si" || valor === "no" ? valor : null;
-        } catch {
-            return null;
-        }
+    // Lo último que se supo del invitado: de acá salen los pases que se
+    // confirman, así siempre son los que los novios tienen cargados ahora.
+    let invitado: Invitado | null = null;
+
+    // Lo que ya respondió, según el panel
+    function leerRespuesta(inv: Invitado | null): Respuesta | null {
+        if (!inv) return null;
+        if (inv.confirmado === true) return "si";
+        if (inv.confirmado === false) return "no";
+        return null;
     }
 
-    // PENDIENTE: acá se envía la respuesta al sistema de invitados
-    async function enviarRespuesta(respuesta: Respuesta) {
-        try {
-            localStorage.setItem(clave(), respuesta);
-        } catch {
-            // Sin almacenamiento la ventana igual muestra el agradecimiento
-        }
+    /*
+       Guarda la respuesta en el panel. Confirma con todos sus pases: esta
+       boda no pregunta cuántos vienen. Devuelve si quedó guardada; nunca
+       lanza, así que la ventana agradece igual aunque la base no conteste.
+    */
+    async function enviarRespuesta(respuesta: Respuesta): Promise<boolean> {
+        if (!codigoDelLink()) return false;
+        const asiste = respuesta === "si";
+        const pases = invitado && invitado.pases > 0 ? invitado.pases : 1;
+        const fila = await confirmarAsistencia(asiste, asiste ? pases : 0, []);
+        if (fila) invitado = fila;
+        return Boolean(fila);
     }
 
     function mostrarPaso(paso: "pregunta" | Respuesta) {
@@ -262,6 +280,13 @@
         abrir.hidden = true;
         aviso.textContent = AVISOS[respuesta];
         aviso.hidden = false;
+    }
+
+    // Lo contrario: vuelve el botón (los novios le borraron la respuesta)
+    function marcarSinResponder() {
+        abrir.hidden = false;
+        aviso.textContent = "";
+        aviso.hidden = true;
     }
 
     function abrirModal() {
@@ -313,17 +338,38 @@
             const respuesta = boton.dataset.responder as Respuesta;
             const botones = modal.querySelectorAll<HTMLButtonElement>("[data-responder]");
             botones.forEach((b) => (b.disabled = true));
-            await enviarRespuesta(respuesta);
+            const guardada = await enviarRespuesta(respuesta);
             botones.forEach((b) => (b.disabled = false));
             mostrarPaso(respuesta);
-            marcarRespondido(respuesta);
+            // Si no quedó guardada (sin código o sin conexión), el botón
+            // sigue a la vista para que pueda volver a intentarlo.
+            if (guardada) marcarRespondido(respuesta);
         });
     });
 
-    // Si ya había respondido antes, el botón no vuelve a aparecer. Espera
-    // un turno para que la tarjeta del invitado ya tenga el nombre del link.
-    setTimeout(() => {
-        const previa = leerRespuesta();
+    /*
+       El estado del recuadro según el panel: si ya respondió, el aviso en
+       lugar del botón. Se repite cada vez que los novios cambian algo, con
+       la página abierta. Si la boda no tiene la confirmación contratada,
+       el recuadro entero no tiene sentido y se esconde.
+    */
+    const recuadro = abrir.closest<HTMLElement>(".recuadro");
+
+    function mostrar(inv: Invitado | null) {
+        if (!inv) return;
+        invitado = inv;
+
+        if (inv.funciones && inv.funciones.confirmacion === false) {
+            if (recuadro) recuadro.style.display = "none";
+            return;
+        }
+        if (recuadro) recuadro.style.display = "";
+
+        const previa = leerRespuesta(inv);
         if (previa) marcarRespondido(previa);
-    });
+        else marcarSinResponder();
+    }
+
+    datosInvitado().then(mostrar);
+    alCambiarInvitado(mostrar);
 </script>
