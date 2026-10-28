@@ -14,7 +14,7 @@ const { title } = Astro.props;
    Vista previa al compartir el link: la imagen va en 1200x630, que es la
    franja que usa WhatsApp, y la ruta tiene que ser completa (Astro.site).
 */
-const miniatura = new URL("/imagenes/primicia/miniatura-whatsapp.jpg", Astro.site).href;
+const miniatura = new URL("/imagenes/miniatura-whatsapp.jpg", Astro.site).href;
 const paginaActual = new URL(Astro.url.pathname, Astro.site).href;
 const tituloPreview = `${novio} & ${novia}`;
 ---
