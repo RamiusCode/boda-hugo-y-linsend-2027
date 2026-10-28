@@ -1,8 +1,8 @@
 ---
 // src/components/primicia/Periodico.astro
 // La portada de diario que tapa la invitación al abrirla. El botón la
-// desvanece, arranca la música y pide pantalla completa (en iPhone no
-// existe y se saltea solo).
+// desvanece y arranca la música. No pide pantalla completa (la plantilla
+// sí): en muchos Android eso giraba el celular a horizontal.
 import { fecha } from "../../datos/boda";
 
 const lineaFecha = `${fecha.diaSemana}, ${fecha.dia} de ${fecha.mes}, ${fecha.anio}`.toUpperCase();
@@ -142,13 +142,6 @@ const lineaFecha = `${fecha.diaSemana}, ${fecha.dia} de ${fecha.mes}, ${fecha.an
     boton?.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
         reproducir();
-
-        const raiz = document.documentElement as HTMLElement & {
-            webkitRequestFullscreen?: () => void;
-        };
-        if (raiz.requestFullscreen) raiz.requestFullscreen().catch(() => {});
-        else raiz.webkitRequestFullscreen?.();
-
         document.body.classList.remove("periodico-abierto");
         if (!portada) return;
         portada.style.opacity = "0";
