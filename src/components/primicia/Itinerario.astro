@@ -8,6 +8,12 @@ import { cronograma, vestimenta } from "../../datos/boda";
 // abajo; así se van intercalando.
 const derecha = cronograma.filter((_, i) => i % 2 === 0);
 const izquierda = cronograma.filter((_, i) => i % 2 === 1);
+
+// Entrada escalonada: cada momento aparece un poco después del anterior,
+// en orden de horario (el k-ésimo de la derecha es el 2k, el de la
+// izquierda el 2k + 1).
+const PASO = 0.3;
+const retraso = (orden: number) => `--retraso:${(orden * PASO).toFixed(1)}s`;
 ---
 
 <section class="itinerario">
@@ -17,12 +23,12 @@ const izquierda = cronograma.filter((_, i) => i % 2 === 1);
         <div class="lado lado-izq">
             <div class="desfase" aria-hidden="true"></div>
             {
-                izquierda.map((momento) => (
-                    <div class="momento">
+                izquierda.map((momento, k) => (
+                    <div class="momento" data-entrada style={retraso(2 * k + 1)}>
                         <img class="icono icono-sacudir" src={`/iconos/${momento.icono}.png`} alt="" loading="lazy" />
-                        <p class="nombre" data-entrada>{momento.nombre}</p>
+                        <p class="nombre">{momento.nombre}</p>
                         <span class="raya" />
-                        <p class="hora" data-entrada>{momento.hora} h</p>
+                        <p class="hora">{momento.hora} h</p>
                     </div>
                 ))
             }
@@ -35,12 +41,12 @@ const izquierda = cronograma.filter((_, i) => i % 2 === 1);
 
         <div class="lado lado-der">
             {
-                derecha.map((momento) => (
-                    <div class="momento">
+                derecha.map((momento, k) => (
+                    <div class="momento" data-entrada style={retraso(2 * k)}>
                         <img class="icono icono-sacudir" src={`/iconos/${momento.icono}.png`} alt="" loading="lazy" />
-                        <p class="nombre" data-entrada>{momento.nombre}</p>
+                        <p class="nombre">{momento.nombre}</p>
                         <span class="raya" />
-                        <p class="hora" data-entrada>{momento.hora} h</p>
+                        <p class="hora">{momento.hora} h</p>
                     </div>
                 ))
             }

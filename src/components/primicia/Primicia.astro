@@ -52,8 +52,9 @@ const { pases = 0 } = Astro.props;
         visibility: hidden;
     }
 
+    /* --retraso lo usa el itinerario para que sus momentos entren de a uno */
     [data-entrada].entro {
-        animation: subir-y-aparecer 1.25s both;
+        animation: subir-y-aparecer 1.25s var(--retraso, 0s) both;
     }
 
     @keyframes subir-y-aparecer {
