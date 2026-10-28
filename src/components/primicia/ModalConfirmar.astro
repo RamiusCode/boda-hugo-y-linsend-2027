@@ -1,11 +1,11 @@
 ---
 // src/components/primicia/ModalConfirmar.astro
 // La ventana que abre el botón "Confirmar": saluda al invitado por su
-// nombre y pregunta si asiste o no. Los pases no se repiten acá: ya están
-// en la tarjeta del invitado.
+// nombre, le recuerda cuántos pases tiene y pregunta si asiste o no.
 //
-// El nombre se lee de esa tarjeta (Bienvenida), así siempre coincide con
-// lo que dice el link.
+// El nombre y los pases se leen de la tarjeta del invitado (Bienvenida),
+// así siempre coinciden con lo que dice el panel o el link. Si la tarjeta
+// no muestra pases, acá tampoco aparece la línea.
 //
 // La respuesta va al panel de invitados, a la fila del invitado del link
 // (?i=k7m2p): nadie puede confirmar por otro. El estado "ya respondió" se
@@ -25,11 +25,12 @@
         <!-- Paso 1: la pregunta -->
         <div class="paso" data-paso="pregunta">
             <p class="nombre" data-nombre></p>
-            <p class="dedicatoria">Será un honor celebrar este día a tu lado.</p>
+            <p class="tus-pases" data-linea-pases>Tienes <strong data-pases></strong></p>
+            <p class="dedicatoria">Será un honor contar contigo este día.</p>
 
             <span class="linea" aria-hidden="true"></span>
 
-            <p class="pregunta">¿Nos acompañarás en este día tan especial?</p>
+            <p class="pregunta">¿Nos acompañas?</p>
             <button class="boton boton-si" type="button" data-responder="si">Confirmo mi asistencia</button>
             <button class="boton boton-no" type="button" data-responder="no">No podré asistir</button>
         </div>
@@ -142,6 +143,17 @@
         overflow-wrap: break-word;
     }
 
+    .tus-pases {
+        margin-top: 6px;
+        font-size: 18px;
+        line-height: 24px;
+        color: #000;
+    }
+
+    .tus-pases[hidden] {
+        display: none;
+    }
+
     .dedicatoria {
         margin-top: 4px;
         font-size: 17px;
@@ -236,6 +248,15 @@
     // Lo que dice la tarjeta del invitado, que ya trae el nombre del panel
     const nombre = () => document.getElementById("nombre-invitado")?.textContent?.trim() ?? "";
 
+    // Los pases tal como los muestra la tarjeta ("2 pases"). Vacío si la
+    // tarjeta los tiene escondidos o no hay ("Sin pases").
+    function pasesDeLaTarjeta(): string {
+        const el = document.getElementById("pases-invitado");
+        if (!el || el.hidden || el.closest("[hidden]")) return "";
+        const texto = el.textContent?.trim() ?? "";
+        return /^\d/.test(texto) ? texto : "";
+    }
+
     type Respuesta = "si" | "no";
 
     const AVISOS: Record<Respuesta, string> = {
@@ -291,6 +312,10 @@
 
     function abrirModal() {
         modal.querySelectorAll("[data-nombre]").forEach((el) => (el.textContent = nombre()));
+        const pases = pasesDeLaTarjeta();
+        const lineaPases = modal.querySelector<HTMLElement>("[data-linea-pases]")!;
+        lineaPases.hidden = !pases;
+        lineaPases.querySelector("[data-pases]")!.textContent = pases;
         mostrarPaso("pregunta");
         modal.hidden = false;
         trabarFondo();
