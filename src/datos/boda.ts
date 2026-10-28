@@ -41,7 +41,7 @@ export const recepcion = {
     direccion:
         "Av. Moscú entre 7mo y 8vo anillo esq. calle Rosario.",
     mapa: "https://maps.app.goo.gl/FvEyxYoXjXPrU6QHA",
-    foto: "/imagenes/recepcion.jpg",
+    foto: "/imagenes/recepcion.webp",
 };
 
 // ── Cronograma ───────────────────────────────────────────────
