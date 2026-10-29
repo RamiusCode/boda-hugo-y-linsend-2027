@@ -25,7 +25,7 @@ const retraso = (orden: number) => `--retraso:${(orden * PASO).toFixed(1)}s`;
             {
                 izquierda.map((momento, k) => (
                     <div class="momento" data-entrada style={retraso(2 * k + 1)}>
-                        <img class="icono icono-sacudir" src={`/iconos/${momento.icono}.png`} alt="" loading="lazy" />
+                        <img class={`icono anim-${momento.icono}`} src={`/iconos/${momento.icono}.png`} alt="" loading="lazy" />
                         <p class="nombre">{momento.nombre}</p>
                         <span class="raya" />
                         <p class="hora">{momento.hora} h</p>
@@ -43,7 +43,7 @@ const retraso = (orden: number) => `--retraso:${(orden * PASO).toFixed(1)}s`;
             {
                 derecha.map((momento, k) => (
                     <div class="momento" data-entrada style={retraso(2 * k)}>
-                        <img class="icono icono-sacudir" src={`/iconos/${momento.icono}.png`} alt="" loading="lazy" />
+                        <img class={`icono anim-${momento.icono}`} src={`/iconos/${momento.icono}.png`} alt="" loading="lazy" />
                         <p class="nombre">{momento.nombre}</p>
                         <span class="raya" />
                         <p class="hora">{momento.hora} h</p>
@@ -114,6 +114,137 @@ const retraso = (orden: number) => `--retraso:${(orden * PASO).toFixed(1)}s`;
         height: 50px;
         object-fit: contain;
         margin-bottom: 10px;
+    }
+
+    /*
+       ── Cada ícono se mueve según lo que muestra ──────────────
+       La clase sale del nombre del ícono en datos/boda.ts (anim-iglesia,
+       anim-cena...). Todas son suaves: hacen su gesto, descansan y lo
+       repiten. Un ícono sin animación propia queda quieto.
+    */
+
+    /* Iglesia: se balancea colgada de arriba, como una campana */
+    .anim-iglesia {
+        transform-origin: 50% 0;
+        animation: itin-campana 4s ease-in-out infinite;
+    }
+
+    @keyframes itin-campana {
+        0%,
+        45%,
+        100% {
+            transform: rotate(0);
+        }
+        10% {
+            transform: rotate(7deg);
+        }
+        20% {
+            transform: rotate(-6deg);
+        }
+        30% {
+            transform: rotate(3deg);
+        }
+        38% {
+            transform: rotate(-1.5deg);
+        }
+    }
+
+    /* Pareja que entra: late como un corazón, dos pulsos */
+    .anim-entrada {
+        animation: itin-latido 3s ease-in-out infinite;
+    }
+
+    @keyframes itin-latido {
+        0%,
+        40%,
+        100% {
+            transform: scale(1);
+        }
+        10% {
+            transform: scale(1.14);
+        }
+        18% {
+            transform: scale(1);
+        }
+        27% {
+            transform: scale(1.09);
+        }
+    }
+
+    /* Arco de la ceremonia civil: se acerca despacio y vuelve */
+    .anim-recepcion {
+        animation: itin-acercarse 4.5s ease-in-out infinite;
+    }
+
+    @keyframes itin-acercarse {
+        0%,
+        60%,
+        100% {
+            transform: scale(1);
+        }
+        30% {
+            transform: scale(1.18);
+        }
+    }
+
+    /* Copas: se inclinan como chocando y vuelven con un rebote */
+    .anim-brindis {
+        transform-origin: 50% 100%;
+        animation: itin-brindar 3.5s ease-in-out infinite;
+    }
+
+    @keyframes itin-brindar {
+        0%,
+        50%,
+        100% {
+            transform: rotate(0);
+        }
+        15% {
+            transform: rotate(-12deg);
+        }
+        28% {
+            transform: rotate(4deg);
+        }
+        38% {
+            transform: rotate(-2deg);
+        }
+    }
+
+    /* Plato: un saltito y un rebote chiquito, como al servirlo */
+    .anim-cena {
+        animation: itin-saltito 3s ease-in-out infinite;
+    }
+
+    @keyframes itin-saltito {
+        0%,
+        50%,
+        100% {
+            transform: translateY(0);
+        }
+        15% {
+            transform: translateY(-10px);
+        }
+        30% {
+            transform: translateY(0);
+        }
+        38% {
+            transform: translateY(-4px);
+        }
+    }
+
+    /* Notas: se mecen de lado a lado con ritmo, sin parar, como bailando */
+    .anim-musica {
+        animation: itin-bailar 1.6s ease-in-out infinite;
+    }
+
+    @keyframes itin-bailar {
+        0%,
+        100% {
+            transform: translateX(-3px) rotate(-8deg);
+        }
+        50% {
+            transform: translateX(3px) rotate(8deg);
+        }
     }
 
     .nombre {
