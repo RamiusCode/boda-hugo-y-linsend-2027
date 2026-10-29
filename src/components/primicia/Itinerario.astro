@@ -12,8 +12,8 @@ const izquierda = cronograma.filter((_, i) => i % 2 === 1);
 // Entrada escalonada: cada momento aparece un poco después del anterior,
 // en orden de horario (el k-ésimo de la derecha es el 2k, el de la
 // izquierda el 2k + 1).
-const PASO = 0.3;
-const retraso = (orden: number) => `--retraso:${(orden * PASO).toFixed(1)}s`;
+const PASO = 0.12;
+const retraso = (orden: number) => `--retraso:${(orden * PASO).toFixed(2)}s`;
 ---
 
 <section class="itinerario">
@@ -106,6 +106,26 @@ const retraso = (orden: number) => `--retraso:${(orden * PASO).toFixed(1)}s`;
         min-height: 200px;
         text-align: center;
         color: #1b1a1c;
+    }
+
+    /*
+       Entrada propia del itinerario, más suave que la del resto: sube
+       apenas, aparece despacio y frena con delicadeza. Con --retraso cada
+       momento arranca un poquito después del anterior.
+    */
+    .momento[data-entrada].entro {
+        animation: itin-entrar 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) var(--retraso, 0s) both;
+    }
+
+    @keyframes itin-entrar {
+        from {
+            opacity: 0;
+            transform: translateY(28px);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
     }
 
     .icono {
