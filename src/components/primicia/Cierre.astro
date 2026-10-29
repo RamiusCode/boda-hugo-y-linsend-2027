@@ -27,7 +27,7 @@ import Galeria from "./Galeria.astro";
 
         <div class="recuadro">
             <h2 class="titulo-recuadro">SUGERENCIA DE REGALO</h2>
-            <img class="icono icono-sacudir" src="/iconos/lluvia-sobre.png" alt="" loading="lazy" />
+            <img class="icono anim-regalo" src="/iconos/lluvia-sobre.png" alt="" loading="lazy" />
             {regalo.texto.map((parrafo) => <p class="texto" data-entrada>{parrafo}</p>)}
             <img class="qr" src={regalo.qr} alt="Código QR para transferencia" loading="lazy" />
             <div class="cuenta">

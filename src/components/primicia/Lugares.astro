@@ -14,7 +14,7 @@ import { ceremonia, recepcion, soloAdultos } from "../../datos/boda";
 
     <div class="caja cuerpo">
         <h2 class="titulo">¿Dónde será?</h2>
-        <svg class="pin icono-sacudir" viewBox="0 0 64 70" aria-hidden="true">
+        <svg class="pin anim-pin" viewBox="0 0 64 70" aria-hidden="true">
             <path d="M32 4C20 4 11 13 11 25c0 16 21 37 21 37s21-21 21-37C53 13 44 4 32 4z" />
             <circle cx="32" cy="25" r="8" />
             <path d="M40 66h10" />
@@ -57,7 +57,7 @@ import { ceremonia, recepcion, soloAdultos } from "../../datos/boda";
         {
             soloAdultos.mostrar && (
                 <div class="ninos" data-entrada>
-                    <img class="icono-sacudir" src="/iconos/restriccion.png" alt="" loading="lazy" />
+                    <img class="anim-no-ninos" src="/iconos/restriccion.png" alt="" loading="lazy" />
                     <p data-entrada>{soloAdultos.texto}</p>
                 </div>
             )

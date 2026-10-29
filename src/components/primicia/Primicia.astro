@@ -70,10 +70,12 @@ const { pases = 0 } = Astro.props;
 
     /*
        ── Íconos animados ───────────────────────────────────────
-       Todos los íconos llevan icono-sacudir: quedan siempre enteros, se
-       inclinan un poquito a izquierda y derecha cada vez menos, vuelven a
-       su lugar y esperan quietos antes de repetir. Suave y lento, sin
-       tirones, para que se vea delicado.
+       Cada ícono tiene un movimiento propio según lo que muestra (los del
+       itinerario están en Itinerario.astro). Todos son suaves: hacen su
+       gesto, descansan y lo repiten, y el ícono siempre se ve entero.
+
+       icono-sacudir es el del ticket de "Confirmar asistencia": se inclina
+       a izquierda y derecha cada vez menos y vuelve a su lugar.
     */
     .icono-sacudir {
         animation: sacudir 4.5s ease-in-out infinite;
@@ -97,6 +99,137 @@ const { pases = 0 } = Astro.props;
         }
         39% {
             transform: rotate(1deg);
+        }
+    }
+
+    /* Novia: mece la cabeza a un lado y al otro, despacio, con el velo */
+    .anim-novia {
+        transform-origin: 50% 100%;
+        animation: mecer-novia 5s ease-in-out infinite;
+    }
+
+    @keyframes mecer-novia {
+        0%,
+        55%,
+        100% {
+            transform: rotate(0);
+        }
+        18% {
+            transform: rotate(-5deg);
+        }
+        38% {
+            transform: rotate(4deg);
+        }
+    }
+
+    /* Novio: hace una pequeña reverencia, como saludando */
+    .anim-novio {
+        transform-origin: 50% 100%;
+        animation: reverencia 5s ease-in-out infinite;
+        animation-delay: 1.2s;
+    }
+
+    @keyframes reverencia {
+        0%,
+        45%,
+        100% {
+            transform: translateY(0) rotate(0);
+        }
+        15% {
+            transform: translateY(3px) rotate(6deg);
+        }
+        30% {
+            transform: translateY(0) rotate(-1.5deg);
+        }
+    }
+
+    /* Vestimenta: se luce, crece apenas con un leve giro y vuelve */
+    .anim-vestimenta {
+        animation: lucirse 4.5s ease-in-out infinite;
+    }
+
+    @keyframes lucirse {
+        0%,
+        55%,
+        100% {
+            transform: scale(1) rotate(0);
+        }
+        20% {
+            transform: scale(1.08) rotate(-3deg);
+        }
+        38% {
+            transform: scale(1.04) rotate(2deg);
+        }
+    }
+
+    /* Pin del mapa: cae sobre el lugar y rebota, como marcándolo */
+    .anim-pin {
+        transform-origin: 50% 100%;
+        animation: marcar-lugar 3.5s ease-in-out infinite;
+    }
+
+    @keyframes marcar-lugar {
+        0%,
+        50%,
+        100% {
+            transform: translateY(0) scale(1, 1);
+        }
+        15% {
+            transform: translateY(-14px) scale(1, 1);
+        }
+        27% {
+            transform: translateY(0) scale(1.06, 0.94);
+        }
+        36% {
+            transform: translateY(-4px) scale(1, 1);
+        }
+    }
+
+    /* Sin niños: mueve la cabeza de lado a lado, como diciendo "no" */
+    .anim-no-ninos {
+        animation: decir-no 4s ease-in-out infinite;
+    }
+
+    @keyframes decir-no {
+        0%,
+        40%,
+        100% {
+            transform: translateX(0);
+        }
+        8% {
+            transform: translateX(-5px);
+        }
+        16% {
+            transform: translateX(5px);
+        }
+        24% {
+            transform: translateX(-3px);
+        }
+        32% {
+            transform: translateX(2px);
+        }
+    }
+
+    /* Regalo: salta con ilusión y se sacude un poquito al caer */
+    .anim-regalo {
+        transform-origin: 50% 100%;
+        animation: regalo-ilusion 4s ease-in-out infinite;
+    }
+
+    @keyframes regalo-ilusion {
+        0%,
+        50%,
+        100% {
+            transform: translateY(0) rotate(0);
+        }
+        14% {
+            transform: translateY(-10px) rotate(-5deg);
+        }
+        26% {
+            transform: translateY(0) rotate(4deg);
+        }
+        36% {
+            transform: translateY(0) rotate(-2deg);
         }
     }
 </style>
