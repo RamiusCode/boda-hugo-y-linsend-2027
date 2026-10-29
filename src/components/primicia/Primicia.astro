@@ -102,44 +102,51 @@ const { pases = 0 } = Astro.props;
         }
     }
 
-    /* Novia: mece la cabeza a un lado y al otro, despacio, con el velo */
+    /*
+       Novia: flota despacio, como el velo con la brisa. Sube apenas
+       inclinándose a un lado, baja, y sube hacia el otro; nunca se frena
+       de golpe.
+    */
     .anim-novia {
         transform-origin: 50% 100%;
-        animation: mecer-novia 5s ease-in-out infinite;
+        animation: flotar-novia 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
     }
 
-    @keyframes mecer-novia {
+    @keyframes flotar-novia {
         0%,
-        55%,
+        50%,
         100% {
-            transform: rotate(0);
+            transform: translateY(0) rotate(0);
         }
-        18% {
-            transform: rotate(-5deg);
+        25% {
+            transform: translateY(-6px) rotate(-3deg);
         }
-        38% {
-            transform: rotate(4deg);
+        75% {
+            transform: translateY(-4px) rotate(2.5deg);
         }
     }
 
-    /* Novio: hace una pequeña reverencia, como saludando */
+    /*
+       Novio: una reverencia lenta y elegante. Se inclina, se endereza
+       subiendo apenas y descansa. Arranca después que la novia para que
+       no se muevan al mismo tiempo.
+    */
     .anim-novio {
         transform-origin: 50% 100%;
-        animation: reverencia 5s ease-in-out infinite;
-        animation-delay: 1.2s;
+        animation: reverencia 6s cubic-bezier(0.45, 0, 0.55, 1) 1.5s infinite;
     }
 
     @keyframes reverencia {
         0%,
-        45%,
+        62%,
         100% {
-            transform: translateY(0) rotate(0);
+            transform: translateY(0) rotate(0) scale(1);
         }
-        15% {
-            transform: translateY(3px) rotate(6deg);
+        24% {
+            transform: translateY(2px) rotate(5deg) scale(0.98);
         }
-        30% {
-            transform: translateY(0) rotate(-1.5deg);
+        44% {
+            transform: translateY(-3px) rotate(-1deg) scale(1.03);
         }
     }
 
