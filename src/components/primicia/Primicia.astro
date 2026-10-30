@@ -70,85 +70,10 @@ const { pases = 0 } = Astro.props;
 
     /*
        ── Íconos animados ───────────────────────────────────────
-       Cada ícono tiene un movimiento propio según lo que muestra (los del
-       itinerario están en Itinerario.astro). Todos son suaves: hacen su
-       gesto, descansan y lo repiten, y el ícono siempre se ve entero.
-
-       icono-sacudir es el del ticket de "Confirmar asistencia": se inclina
-       a izquierda y derecha cada vez menos y vuelve a su lugar.
+       La mayoría de los íconos ya vienen animados (GIF pasado a negro en
+       /iconos/animados/). Los dos que no tienen GIF se mueven con CSS:
+       suaves, hacen su gesto, descansan y lo repiten.
     */
-    .icono-sacudir {
-        animation: sacudir 4.5s ease-in-out infinite;
-        transform-origin: 50% 60%;
-    }
-
-    @keyframes sacudir {
-        0%,
-        45%,
-        100% {
-            transform: rotate(0);
-        }
-        9% {
-            transform: rotate(-7deg);
-        }
-        20% {
-            transform: rotate(5deg);
-        }
-        31% {
-            transform: rotate(-2.5deg);
-        }
-        39% {
-            transform: rotate(1deg);
-        }
-    }
-
-    /*
-       Novia: flota despacio, como el velo con la brisa. Sube apenas
-       inclinándose a un lado, baja, y sube hacia el otro; nunca se frena
-       de golpe.
-    */
-    .anim-novia {
-        transform-origin: 50% 100%;
-        animation: flotar-novia 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-    }
-
-    @keyframes flotar-novia {
-        0%,
-        50%,
-        100% {
-            transform: translateY(0) rotate(0);
-        }
-        25% {
-            transform: translateY(-6px) rotate(-3deg);
-        }
-        75% {
-            transform: translateY(-4px) rotate(2.5deg);
-        }
-    }
-
-    /*
-       Novio: una reverencia lenta y elegante. Se inclina, se endereza
-       subiendo apenas y descansa. Arranca después que la novia para que
-       no se muevan al mismo tiempo.
-    */
-    .anim-novio {
-        transform-origin: 50% 100%;
-        animation: reverencia 6s cubic-bezier(0.45, 0, 0.55, 1) 1.5s infinite;
-    }
-
-    @keyframes reverencia {
-        0%,
-        62%,
-        100% {
-            transform: translateY(0) rotate(0) scale(1);
-        }
-        24% {
-            transform: translateY(2px) rotate(5deg) scale(0.98);
-        }
-        44% {
-            transform: translateY(-3px) rotate(-1deg) scale(1.03);
-        }
-    }
 
     /* Vestimenta: se luce, crece apenas con un leve giro y vuelve */
     .anim-vestimenta {
@@ -166,29 +91,6 @@ const { pases = 0 } = Astro.props;
         }
         38% {
             transform: scale(1.04) rotate(2deg);
-        }
-    }
-
-    /* Pin del mapa: cae sobre el lugar y rebota, como marcándolo */
-    .anim-pin {
-        transform-origin: 50% 100%;
-        animation: marcar-lugar 3.5s ease-in-out infinite;
-    }
-
-    @keyframes marcar-lugar {
-        0%,
-        50%,
-        100% {
-            transform: translateY(0) scale(1, 1);
-        }
-        15% {
-            transform: translateY(-14px) scale(1, 1);
-        }
-        27% {
-            transform: translateY(0) scale(1.06, 0.94);
-        }
-        36% {
-            transform: translateY(-4px) scale(1, 1);
         }
     }
 
@@ -214,29 +116,6 @@ const { pases = 0 } = Astro.props;
         }
         32% {
             transform: translateX(2px);
-        }
-    }
-
-    /* Regalo: salta con ilusión y se sacude un poquito al caer */
-    .anim-regalo {
-        transform-origin: 50% 100%;
-        animation: regalo-ilusion 4s ease-in-out infinite;
-    }
-
-    @keyframes regalo-ilusion {
-        0%,
-        50%,
-        100% {
-            transform: translateY(0) rotate(0);
-        }
-        14% {
-            transform: translateY(-10px) rotate(-5deg);
-        }
-        26% {
-            transform: translateY(0) rotate(4deg);
-        }
-        36% {
-            transform: translateY(0) rotate(-2deg);
         }
     }
 </style>

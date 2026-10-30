@@ -1,0 +1,248 @@
+---
+// src/components/primicia/FechaContador.astro
+// "¡El gran día se acerca!", la fecha en tres partes y la cuenta regresiva
+// en tres cajas negras (días, horas, minutos).
+import { fecha } from "../../datos/boda";
+---
+
+<section class="caja fecha">
+    <div class="gran-dia">
+        <p data-entrada>¡El gran día se acerca y no puedes faltar!</p>
+    </div>
+
+    <div class="fila-fecha">
+        <div class="lado lado-izq"><p class="extremo" data-entrada>{fecha.diaSemana}</p></div>
+        <div class="dia-negro">
+            <p class="numero" data-entrada>{fecha.dia}</p>
+            <p class="mes" data-entrada>{fecha.mes.toUpperCase()}</p>
+        </div>
+        <div class="lado lado-der"><p class="extremo" data-entrada>{fecha.anio}</p></div>
+    </div>
+
+    <div class="contador" data-entrada data-inicio={fecha.inicio}>
+        <div class="celda">
+            <span class="digitos" data-unidad="dias">00</span>
+            <span class="rotulo">Días</span>
+        </div>
+        <div class="celda">
+            <span class="digitos" data-unidad="horas">00</span>
+            <span class="rotulo">Horas</span>
+        </div>
+        <div class="celda">
+            <span class="digitos" data-unidad="minutos">00</span>
+            <span class="rotulo">Mins.</span>
+        </div>
+    </div>
+
+    <div class="divisor"><span></span></div>
+</section>
+
+<style>
+    .gran-dia {
+        padding: 20px;
+        font-family: "Old Standard TT", serif;
+        font-size: 25px;
+        line-height: 27.2px;
+        text-transform: uppercase;
+        text-align: center;
+        color: #1b1a1c;
+    }
+
+    .fila-fecha {
+        display: flex;
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .lado {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .lado-izq {
+        align-items: flex-end;
+    }
+
+    .lado-der {
+        align-items: flex-start;
+    }
+
+    .extremo {
+        font-size: 35px;
+        line-height: 27.2px;
+        color: #000;
+    }
+
+    .dia-negro {
+        width: 224px;
+        padding: 7px;
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+    }
+
+    .numero {
+        font-size: 50px;
+        line-height: 50px;
+    }
+
+    .mes {
+        font-size: 16px;
+        line-height: 27.2px;
+    }
+
+    /* ── Cuenta regresiva ──────────────────────────────────── */
+    .contador {
+        display: flex;
+        width: 55%;
+        margin: 19px auto;
+        padding: 20px;
+    }
+
+    .celda {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 3px;
+        padding: 20px;
+        background-color: #000;
+        color: #fff;
+        font-family: "Times New Roman", Times, serif;
+        text-align: center;
+    }
+
+    .celda:first-child {
+        background-color: #020202;
+    }
+
+    .celda:last-child {
+        background-color: #060606;
+    }
+
+    .digitos {
+        font-size: 54px;
+        font-weight: 700;
+        line-height: 46px;
+        letter-spacing: -0.7px;
+    }
+
+    .rotulo {
+        font-size: 18px;
+        line-height: 18px;
+        text-transform: uppercase;
+    }
+
+    .divisor {
+        margin: 19px 0;
+        padding: 10px;
+    }
+
+    .divisor span {
+        display: block;
+        margin: 15px 0;
+        border-top: 1px solid #000;
+    }
+
+    @media (max-width: 1024px) {
+        .dia-negro {
+            width: 200px;
+        }
+
+        .celda {
+            margin: 0;
+        }
+
+        .digitos {
+            font-size: 38px;
+            line-height: 0.9em;
+            letter-spacing: -2.4px;
+        }
+
+        /* En tablet la plantilla esconde los rótulos */
+        .rotulo {
+            font-size: 0;
+            line-height: 0.1em;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .gran-dia {
+            font-size: 18px;
+            line-height: 22px;
+        }
+
+        .fila-fecha {
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .lado {
+            align-items: center;
+        }
+
+        .extremo {
+            font-size: 25px;
+            line-height: 32px;
+        }
+
+        .dia-negro {
+            width: 100%;
+        }
+
+        .mes {
+            line-height: 13px;
+        }
+
+        .contador {
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .celda {
+            margin: 0 2px;
+            padding: 32px 10px;
+        }
+
+        .digitos {
+            font-size: 32px;
+            line-height: 32px;
+            letter-spacing: 0;
+        }
+
+        .rotulo {
+            font-size: 13px;
+            line-height: 15px;
+        }
+
+        .divisor {
+            margin: 0;
+        }
+    }
+</style>
+
+<script>
+    const contador = document.querySelector<HTMLElement>(".contador");
+    const meta = new Date(contador?.dataset.inicio ?? "").getTime();
+    const campo = (unidad: string) =>
+        contador?.querySelector<HTMLElement>(`[data-unidad="${unidad}"]`);
+    const dos = (n: number) => String(n).padStart(2, "0");
+
+    function actualizar() {
+        const resta = Math.max(0, meta - Date.now());
+        const minutos = Math.floor(resta / 60000);
+        const dias = campo("dias");
+        const horas = campo("horas");
+        const mins = campo("minutos");
+        if (dias) dias.textContent = dos(Math.floor(minutos / 1440));
+        if (horas) horas.textContent = dos(Math.floor((minutos % 1440) / 60));
+        if (mins) mins.textContent = dos(minutos % 60);
+    }
+
+    actualizar();
+    setInterval(actualizar, 15000);
+</script>

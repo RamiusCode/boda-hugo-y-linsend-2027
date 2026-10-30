@@ -19,7 +19,7 @@ import Galeria from "./Galeria.astro";
 
         <div class="recuadro">
             <h2 class="titulo-recuadro">CONFIRMAR ASISTENCIA</h2>
-            <img class="icono icono-sacudir" src="/iconos/reserva.png" alt="" loading="lazy" />
+            <img class="icono" src="/iconos/animados/asistencia.webp" alt="" loading="lazy" />
             <p class="texto" data-entrada>Es importante para nosotros que puedas confirmar tu asistencia.</p>
             <button id="abrir-confirmar" class="boton latido" type="button">Confirmar</button>
             <p id="ya-respondio" class="ya-respondio" hidden></p>
@@ -27,7 +27,7 @@ import Galeria from "./Galeria.astro";
 
         <div class="recuadro">
             <h2 class="titulo-recuadro">SUGERENCIA DE REGALO</h2>
-            <img class="icono anim-regalo" src="/iconos/lluvia-sobre.png" alt="" loading="lazy" />
+            <img class="icono" src="/iconos/animados/regalo.webp" alt="" loading="lazy" />
             {regalo.texto.map((parrafo) => <p class="texto" data-entrada>{parrafo}</p>)}
             <img class="qr" src={regalo.qr} alt="Código QR para transferencia" loading="lazy" />
             <div class="cuenta">

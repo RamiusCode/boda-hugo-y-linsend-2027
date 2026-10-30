@@ -59,6 +59,8 @@ export const cronograma = [
 // ── Vestimenta ───────────────────────────────────────────────
 export const vestimenta = {
     estilo: "FORMAL",
+    // Pedido especial de los novios, debajo del estilo
+    nota: "Con mucho cariño, les pedimos reservar el blanco y el negro para los novios.",
 };
 
 // Solo adultos: el recuadro debajo de los lugares. Con false no se dibuja.
@@ -91,26 +93,28 @@ export const regalo = {
     ],
     qr: "/imagenes/qr.png",
     // Tal cual figuran en el QR
-    titular: "LINSEND JOHANNA PEREZ SALCES",
-    cuenta: "40012414988",
+    titular: "PEREZ SALCES LINSEND JOHANNA",
+    cuenta: "1021010921",
     concepto: "HUGO Y LINSEND",
 };
 
 // ── Fotos y música ───────────────────────────────────────────
-// PENDIENTE: por ahora las cuatro usan la misma foto genérica (foto.jpg).
-// Cuando los novios manden las suyas, se cambia acá la ruta de cada una:
+// Una foto de los novios para cada lugar, en orden:
 //   portada   → la grande con los nombres
 //   mensaje   → al lado del "Mensaje de los novios"
 //   exclusiva → la que pasa sola junto a los padres
 //   cierre    → la grande del final, junto a la confirmación y el regalo
 // Para que una galería pase varias fotos, se agregan más a su lista.
-const generica = "/imagenes/foto.jpg";
+const foto1 = "/imagenes/foto1.jpeg";
+const foto2 = "/imagenes/foto2.jpeg";
+const foto3 = "/imagenes/foto3.jpeg";
+const foto4 = "/imagenes/foto4.jpeg";
 export const fotos = {
-    portada: generica,
-    mensaje: generica,
+    portada: foto1,
+    mensaje: foto2,
     // Las dos galerías que pasan solas, con zoom lento
-    exclusiva: [generica],
-    cierre: [generica],
+    exclusiva: [foto4],
+    cierre: [foto3],
 };
 
 export const cancion = "/musica/cancion.mp3";

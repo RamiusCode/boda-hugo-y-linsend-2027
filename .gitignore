@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# GIF originales de los íconos (pesados; en la web van los WebP de public/iconos/animados)
+originales-gif/

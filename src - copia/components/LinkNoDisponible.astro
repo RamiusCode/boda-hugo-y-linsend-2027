@@ -1,0 +1,128 @@
+---
+// LinkNoDisponible.astro
+//
+// Cuando los novios borran a un invitado, su link deja de existir pero el
+// invitado no se entera: sin esto vería la invitación con el nombre genérico,
+// creería que todo está bien y se presentaría el día de la boda.
+//
+// Solo aparece cuando la base contestó y no encontró el código. Si la base no
+// responde —proyecto pausado, sin internet— la invitación se muestra normal:
+// dejar afuera a alguien por un problema de conexión sería mucho peor.
+//
+// Es el componente del sistema de invitados con los estilos escritos a mano:
+// este diseño ("periódico") no carga Tailwind, así que las clases del
+// original no harían nada y la pantalla quedaría siempre a la vista.
+---
+
+<div
+    id="link-no-disponible"
+    class="lnd"
+    hidden
+    role="alertdialog"
+    aria-labelledby="lnd-titulo"
+>
+    <!-- CORAZÓN -->
+    <svg class="lnd-corazon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 21s-7.5-4.7-9.7-9A5.4 5.4 0 0 1 12 6.3 5.4 5.4 0 0 1 21.7 12c-2.2 4.3-9.7 9-9.7 9z"></path>
+    </svg>
+
+    <h1 id="lnd-titulo" class="lnd-titulo">Invitación no disponible</h1>
+
+    <span class="lnd-linea" aria-hidden="true"></span>
+
+    <p class="lnd-texto">
+        Este enlace ya no está activo.<br />
+        Si crees que se trata de un error, avísanos
+        y con gusto te enviaremos uno nuevo.
+    </p>
+</div>
+
+<style>
+    .lnd {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0 32px;
+        background-color: #fff;
+        background-image: linear-gradient(#fff, #fff);
+        color: #000;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .lnd[hidden] {
+        display: none;
+    }
+
+    .lnd-corazon {
+        width: 28px;
+        height: 28px;
+        margin-bottom: 24px;
+    }
+
+    .lnd-titulo {
+        font-family: "Cinzel", serif;
+        font-size: 30px;
+        font-weight: 400;
+        line-height: 1.2;
+        overflow-wrap: break-word;
+    }
+
+    .lnd-linea {
+        width: 60%;
+        max-width: 220px;
+        margin: 24px 0;
+        border-top: 1px solid #000;
+    }
+
+    .lnd-texto {
+        max-width: 28rem;
+        font-family: "Old Standard TT", serif;
+        font-size: 18px;
+        line-height: 1.6;
+    }
+</style>
+
+<script>
+    import { estadoDelLink, alCambiarInvitado } from "../lib/invitado";
+    import { pausar } from "../scripts/musica";
+
+    function taparSiNoExiste(estado: string) {
+        if (estado !== "no-existe") return;
+
+        const pantalla = document.getElementById("link-no-disponible");
+        if (!pantalla || !pantalla.hidden) return;
+
+        // La invitación queda debajo, tapada: no se desmonta nada porque
+        // las animaciones y el reproductor ya están corriendo y desarmarlos
+        // a mano es más frágil que taparlos.
+        pantalla.hidden = false;
+        document.body.style.overflow = "hidden";
+        requestAnimationFrame(() => {
+            pantalla.style.opacity = "1";
+        });
+
+        // Si hay música sonando, se corta: la invitación ya no es de nadie.
+        // La canción de esta invitación no está en la página (es un
+        // new Audio() de src/scripts/musica.ts), por eso va aparte.
+        pausar();
+        for (const sonido of document.querySelectorAll("audio, video")) {
+            try {
+                (sonido as HTMLMediaElement).pause();
+            } catch {
+                /* algunos navegadores no dejan pausar antes de interactuar */
+            }
+        }
+    }
+
+    estadoDelLink().then(taparSiNoExiste);
+
+    // Si lo borran mientras tiene la invitación abierta, la pantalla
+    // aparece sin que tenga que recargar.
+    alCambiarInvitado((_inv, estado) => taparSiNoExiste(estado));
+</script>

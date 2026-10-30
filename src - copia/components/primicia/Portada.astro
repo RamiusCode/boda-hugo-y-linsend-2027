@@ -1,0 +1,228 @@
+---
+// src/components/primicia/Portada.astro
+// La foto grande con los nombres, el monograma con las iniciales y la
+// línea con el corazón.
+import { novio, novia, fotos } from "../../datos/boda";
+---
+
+<section class="portada" data-entrada style={`--foto:url('${fotos.portada}')`}>
+    <p class="nombre" data-entrada>{novio}</p>
+    <p class="union" data-entrada>&amp;</p>
+    <p class="nombre" data-entrada>{novia}</p>
+    <div class="espacio-1"></div>
+    <div class="espacio-2"></div>
+
+    <!-- Borde inferior en dos curvas que se juntan al medio -->
+    <div class="forma" aria-hidden="true">
+        <svg viewBox="0 0 1000 20" preserveAspectRatio="none">
+            <path d="M519.8,0.2c-11,0-19.8,8.5-19.8,19c0-10.4-8.8-19-19.8-19L0,0v20h1000V0.2H519.8z"></path>
+        </svg>
+    </div>
+</section>
+
+<div class="caja monograma">
+    <div class="mitad izquierda"><span class="inicial" data-entrada>{novio[0]}</span></div>
+    <div class="mitad derecha"><span class="inicial" data-entrada>{novia[0]}</span></div>
+</div>
+
+<div class="caja divisor-corazon" aria-hidden="true">
+    <span class="linea"></span>
+    <svg class="corazon" viewBox="0 0 512 512">
+        <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"></path>
+    </svg>
+    <span class="linea"></span>
+</div>
+<div class="caja espacio-corazon"></div>
+
+<style>
+    .portada {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        min-height: 90vh;
+        background: var(--foto) center center / cover no-repeat;
+        text-align: center;
+        color: #fff;
+    }
+
+    /* Oscurece de la mitad para abajo, donde van los nombres */
+    .portada::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(180deg, #ffffff00 34%, #000000 100%);
+    }
+
+    .portada > * {
+        position: relative;
+    }
+
+    .nombre {
+        font-family: "Cherolina", cursive;
+        font-size: 122px;
+        font-weight: 400;
+        line-height: 73px;
+        letter-spacing: -1px;
+        text-shadow: 0 0 24px rgba(0, 0, 0, 0.38);
+    }
+
+    /*
+       Más aire que la plantilla arriba del "&": los nombres con letras
+       que cuelgan (la g de Hugo, la y, la j) lo pisaban.
+    */
+    .union {
+        margin: 30px 0 10px;
+        font-family: "Rozha One", serif;
+        font-size: 42px;
+        font-weight: 100;
+        line-height: 50px;
+        letter-spacing: -1px;
+        text-shadow: 0 0 24px rgba(0, 0, 0, 0.38);
+    }
+
+    /* Más bajos que en la plantilla: los nombres van más cerca del borde */
+    .espacio-1 {
+        height: 25px;
+    }
+
+    .espacio-2 {
+        height: 30px;
+    }
+
+    .forma {
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+        direction: ltr;
+    }
+
+    .forma svg {
+        display: block;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(293% + 1.3px);
+        height: 37px;
+    }
+
+    .forma path {
+        fill: #fff;
+    }
+
+    /* ── Monograma ─────────────────────────────────────────── */
+    .monograma {
+        display: flex;
+        min-height: 10vh;
+        padding: 10px 10px;
+    }
+
+    .mitad {
+        flex: 1 1 50%;
+        display: flex;
+        align-items: center;
+    }
+
+    .izquierda {
+        justify-content: flex-end;
+    }
+
+    .derecha {
+        border-left: 2px solid #000;
+    }
+
+    .inicial {
+        font-family: "Old Standard TT", serif;
+        font-size: 30px;
+        line-height: 27.2px;
+        color: #1b1a1c;
+    }
+
+    .izquierda .inicial {
+        margin-right: 8px;
+    }
+
+    .derecha .inicial {
+        margin-left: 10px;
+    }
+
+    /* ── Línea con corazón ─────────────────────────────────── */
+    .divisor-corazon {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 0;
+    }
+
+    .divisor-corazon .linea {
+        flex: 1;
+        border-top: 1px solid #000;
+    }
+
+    .corazon {
+        width: 20px;
+        height: 20px;
+        fill: #000;
+    }
+
+    .espacio-corazon {
+        height: 22px;
+    }
+
+    @media (max-width: 1024px) {
+        .portada {
+            min-height: 39vh;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .portada {
+            min-height: 90vh;
+            margin-bottom: 4%;
+        }
+
+        .nombre {
+            font-size: 90px;
+            line-height: 44px;
+            letter-spacing: 0;
+        }
+
+        .union {
+            margin: 26px 0 8px;
+            font-size: 24px;
+            line-height: 44px;
+            letter-spacing: 0;
+        }
+
+        .forma svg {
+            width: calc(283% + 1.3px);
+            height: 26px;
+        }
+
+        .inicial {
+            font-size: 32px;
+            line-height: 17px;
+        }
+
+        .izquierda .inicial {
+            margin-right: 13px;
+        }
+
+        .divisor-corazon {
+            width: 95%;
+        }
+
+        .corazon {
+            width: 11px;
+            height: 11px;
+        }
+
+        .espacio-corazon {
+            height: 1px;
+        }
+    }
+</style>

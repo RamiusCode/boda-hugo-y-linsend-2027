@@ -1,0 +1,173 @@
+---
+// src/components/primicia/Bienvenida.astro
+// El recuadro negro de bienvenida con la tarjeta del invitado.
+//
+// El nombre y los pases salen del panel de invitados: cada invitado tiene
+// su link con un código (?i=k7m2p) y la tarjeta se completa con lo que los
+// novios cargaron. Si lo corrigen con la página abierta, se actualiza sola.
+//
+// Links sin código: siguen valiendo ?m=Nombre&n=2 (m el nombre, n los
+// pases). Si no hay nada, valen los pases de /pase1, /pase2...; y si
+// tampoco, dice "Invitado" y "Sin pases".
+import { textoPases } from "../../datos/boda";
+
+export interface Props {
+    pases?: number;
+}
+const { pases = 0 } = Astro.props;
+const pasesIniciales = pases > 0 ? textoPases(pases) : "Sin pases";
+---
+
+<section class="caja bienvenida">
+    <p class="saludo" data-entrada>Bienvenidos a la invitación de nuestra Boda</p>
+    <div class="espacio" aria-hidden="true"></div>
+
+    <div class="tarjeta">
+        <!-- El nombre baja de renglón si no entra: no se achica -->
+        <p id="nombre-invitado" class="grande">Invitado</p>
+        <p id="texto-pase-antes" class="chico" data-entrada>Hemos reservado:</p>
+        <p id="pases-invitado" class="grande">{pasesIniciales}</p>
+        <p id="texto-pase-despues" class="chico" data-entrada>en su honor</p>
+    </div>
+
+    <!-- La flecha que apunta hacia abajo al terminar el recuadro -->
+    <div class="forma" aria-hidden="true">
+        <svg viewBox="0 0 700 10" preserveAspectRatio="none">
+            <path d="M360 0L350 9.9 340 0 0 0 0 10 700 10 700 0"></path>
+        </svg>
+    </div>
+</section>
+
+<style>
+    .bienvenida {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 62px;
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+    }
+
+    .saludo,
+    .chico {
+        font-family: "Old Standard TT", serif;
+        font-size: 18px;
+        line-height: 27.2px;
+    }
+
+    .espacio {
+        height: 27px;
+    }
+
+    .tarjeta {
+        width: 500px;
+        max-width: 100%;
+        padding: 10px;
+        border: 2px double #fff;
+        border-radius: 15px;
+    }
+
+    /* 4vh como la plantilla: crece o se achica con el alto de la pantalla */
+    .grande {
+        font-family: "Cinzel", serif;
+        font-size: 4vh;
+        line-height: 1;
+        font-weight: 400;
+        overflow-wrap: break-word;
+    }
+
+    .forma {
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+    }
+
+    .forma svg {
+        display: block;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(130% + 1.3px);
+        height: 20px;
+    }
+
+    .forma path {
+        fill: #fff;
+    }
+
+    @media (max-width: 767px) {
+        .bienvenida {
+            justify-content: space-around;
+            min-height: 15vh;
+            padding: 25px;
+        }
+
+        .saludo,
+        .chico {
+            padding: 10px;
+            line-height: 21px;
+        }
+
+        .tarjeta {
+            width: 100%;
+            padding: 18px;
+        }
+
+        .grande {
+            padding: 3px 0;
+        }
+
+        .forma svg {
+            width: calc(261% + 1.3px);
+            height: 16px;
+        }
+    }
+</style>
+
+<script>
+    import { textoPases } from "../../datos/boda";
+    import { codigoDelLink, datosInvitado, alCambiarInvitado, type Invitado } from "../../lib/invitado";
+
+    const destinoNombre = document.getElementById("nombre-invitado");
+    const destinoPases = document.getElementById("pases-invitado");
+
+    // ── Links sin código: ?m=Daniel Martinez&n=2 ─────────────────
+    if (!codigoDelLink()) {
+        const parametros = new URLSearchParams(window.location.search);
+        const nombre = parametros.get("m")?.trim();
+        const pases = parametros.get("n")?.trim();
+        if (nombre && destinoNombre) destinoNombre.textContent = nombre;
+        if (pases && destinoPases) {
+            // Un número suelto se completa con la palabra: 2 → "2 pases"
+            destinoPases.textContent = /^\d+$/.test(pases) ? textoPases(Number(pases)) : pases;
+        }
+    }
+
+    // ── Con código: lo que cargaron los novios en el panel ───────
+    // Las tres líneas de los pases ("Hemos reservado: / 2 pases / en su
+    // honor") se esconden juntas si la boda no tiene pases contratados.
+    const lineasPases = ["texto-pase-antes", "pases-invitado", "texto-pase-despues"];
+
+    function mostrar(inv: Invitado | null) {
+        if (!inv) return;
+        if (inv.nombre && destinoNombre) destinoNombre.textContent = inv.nombre;
+
+        const funciones = (inv.funciones ?? {}) as Record<string, boolean | undefined>;
+        const conPases = funciones.pases !== false;
+        for (const id of lineasPases) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = conPases ? "" : "none";
+        }
+        if (conPases && destinoPases && Number.isInteger(inv.pases) && inv.pases > 0) {
+            destinoPases.textContent = textoPases(inv.pases);
+        }
+    }
+
+    datosInvitado().then(mostrar);
+    alCambiarInvitado(mostrar);
+</script>

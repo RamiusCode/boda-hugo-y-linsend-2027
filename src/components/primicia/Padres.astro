@@ -6,8 +6,8 @@ import { padresNovia, padresNovio, fotos } from "../../datos/boda";
 import Galeria from "./Galeria.astro";
 
 const grupos = [
-    { titulo: "Padres de la Novia", nombres: padresNovia, icono: "/imagenes/padresnovia.png", animacion: "anim-novia" },
-    { titulo: "Padres del Novio", nombres: padresNovio, icono: "/imagenes/padresnovio.png", animacion: "anim-novio" },
+    { titulo: "Padres de la Novia", nombres: padresNovia, icono: "/iconos/animados/novia.webp" },
+    { titulo: "Padres del Novio", nombres: padresNovio, icono: "/iconos/animados/novio.webp" },
 ];
 ---
 
@@ -19,7 +19,7 @@ const grupos = [
             {
                 grupos.map((grupo) => (
                     <div class="grupo" data-entrada>
-                        <img class={`icono-linea ${grupo.animacion}`} src={grupo.icono} alt="" loading="lazy" />
+                        <img class="icono-linea" src={grupo.icono} alt="" loading="lazy" />
                         <h3 class="titulo-grupo">{grupo.titulo}</h3>
                         <p class="nombres" data-entrada>
                             {grupo.nombres.map((nombre) => (

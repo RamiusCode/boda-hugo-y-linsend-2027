@@ -14,11 +14,7 @@ import { ceremonia, recepcion, soloAdultos } from "../../datos/boda";
 
     <div class="caja cuerpo">
         <h2 class="titulo">¿Dónde será?</h2>
-        <svg class="pin anim-pin" viewBox="0 0 64 70" aria-hidden="true">
-            <path d="M32 4C20 4 11 13 11 25c0 16 21 37 21 37s21-21 21-37C53 13 44 4 32 4z" />
-            <circle cx="32" cy="25" r="8" />
-            <path d="M40 66h10" />
-        </svg>
+        <img class="pin" src="/iconos/animados/ubicacion.webp" alt="" loading="lazy" />
 
         <!-- Ceremonia: el nombre del lugar va en la banda sobre la foto -->
         <article class="tarjeta" data-entrada>
@@ -104,10 +100,7 @@ import { ceremonia, recepcion, soloAdultos } from "../../datos/boda";
     .pin {
         width: 100px;
         height: 108px;
-        fill: none;
-        stroke: #000;
-        stroke-width: 1.6;
-        stroke-linecap: round;
+        object-fit: contain;
     }
 
     /* ── Recuadros de cada lugar ───────────────────────────── */

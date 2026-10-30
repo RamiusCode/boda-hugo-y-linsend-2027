@@ -1,0 +1,72 @@
+---
+// src/components/primicia/BotonMusica.astro
+// El círculo gris con la nota, fijo abajo a la derecha. Pausa y reanuda la
+// canción que arrancó el botón de la portada.
+---
+
+<button id="boton-musica" class="boton-musica sonando" type="button" aria-label="Pausar o reanudar la música">
+    <svg viewBox="0 0 512 512" aria-hidden="true">
+        <path d="M499.1 6.3c8.1 6 12.9 15.6 12.9 25.7v72V368c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V147L192 223.8V432c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V200 128c0-14.1 9.3-26.6 22.8-30.7l320-96c9.7-2.9 20.2-1.1 28.3 4.9z"></path>
+    </svg>
+</button>
+
+<style>
+    .boton-musica {
+        position: fixed;
+        right: 33px;
+        bottom: 37px;
+        z-index: 12;
+        display: grid;
+        place-items: center;
+        width: 50px;
+        height: 50px;
+        border: 0;
+        border-radius: 50%;
+        background-color: #e2e2e2;
+        box-shadow: 0 0 0 7px rgba(0, 0, 0, 0.04);
+        cursor: pointer;
+    }
+
+    .boton-musica svg {
+        width: 20px;
+        height: 20px;
+        fill: #7b7b7b;
+    }
+
+    .boton-musica.sonando svg {
+        animation: nota 1.6s ease-in-out infinite;
+    }
+
+    @keyframes nota {
+        0%,
+        100% {
+            transform: translateY(0) rotate(0);
+        }
+        50% {
+            transform: translateY(-2px) rotate(-8deg);
+        }
+    }
+
+    @media (max-width: 767px) {
+        .boton-musica {
+            right: 18px;
+            bottom: 28px;
+            width: 42px;
+            height: 42px;
+        }
+
+        .boton-musica svg {
+            width: 17px;
+            height: 17px;
+        }
+    }
+</style>
+
+<script>
+    import { alternar } from "../../scripts/musica";
+
+    const boton = document.getElementById("boton-musica");
+    boton?.addEventListener("click", () => {
+        boton.classList.toggle("sonando", alternar());
+    });
+</script>
