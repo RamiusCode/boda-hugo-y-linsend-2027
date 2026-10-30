@@ -21,8 +21,8 @@ export const fecha = {
 };
 
 // ── Padres ───────────────────────────────────────────────────
-export const padresNovia = ["Walter Pérez Coimbra", "Deisy Salces Barba"];
-export const padresNovio = ["Zulema Tapia Ibáñez", "Danny Vázquez Banegas"];
+export const padresNovia = ["Walter Perez Coimbra", "Deisy Salces Barba"];
+export const padresNovio = ["Zulema Tapia Ibáñez", "Danny Vásquez Banegas"];
 
 // ── Lugares ──────────────────────────────────────────────────
 export const ceremonia = {
