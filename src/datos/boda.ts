@@ -98,6 +98,13 @@ export const regalo = {
     concepto: "HUGO Y LINSEND",
 };
 
+// ── Compartir fotos ──────────────────────────────────────────
+// El álbum compartido donde los invitados suben sus fotos de la boda
+export const compartirFotos = {
+    texto: "Te invitamos a compartir las fotografías que tomes en nuestra boda. ¡Queremos revivir cada momento a través de tus ojos!",
+    link: "https://photos.app.goo.gl/uiorzfLzYYvyuBQR9",
+};
+
 // ── Fotos y música ───────────────────────────────────────────
 // Una foto de los novios para cada lugar, en orden:
 //   portada   → la grande con los nombres

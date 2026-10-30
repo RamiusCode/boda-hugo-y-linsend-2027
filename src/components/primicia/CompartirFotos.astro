@@ -1,0 +1,85 @@
+---
+// src/components/primicia/CompartirFotos.astro
+// "Comparte tus fotos": invita a subir las fotos de la boda al álbum
+// compartido. Va en la columna del cierre, con el mismo recuadro que la
+// confirmación y el regalo.
+import { compartirFotos } from "../../datos/boda";
+---
+
+<div class="recuadro">
+    <h2 class="titulo-recuadro">COMPARTE TUS FOTOS</h2>
+    <img class="icono" src="/iconos/animados/fotos.webp" alt="" loading="lazy" />
+    <p class="texto" data-entrada>{compartirFotos.texto}</p>
+    <a class="boton" href={compartirFotos.link} target="_blank" rel="noopener noreferrer">Subir mis fotos</a>
+</div>
+
+<style>
+    .recuadro {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 10px;
+        border: 2px solid #000;
+    }
+
+    .titulo-recuadro {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 30px;
+        text-align: center;
+        color: #000;
+    }
+
+    .icono {
+        align-self: center;
+        width: 80px;
+        height: 80px;
+        margin: 14px 0;
+        object-fit: contain;
+    }
+
+    .texto {
+        font-size: 18px;
+        line-height: 21.6px;
+        color: #1b1a1c;
+    }
+
+    .boton {
+        display: block;
+        width: 100%;
+        padding: 20px;
+        border: 2px solid #000;
+        border-radius: 3px;
+        background-color: #000;
+        color: #fff;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 18px;
+        font-weight: 300;
+        line-height: 18px;
+        text-align: center;
+    }
+
+    @media (max-width: 767px) {
+        .titulo-recuadro {
+            font-size: 21px;
+            line-height: 24px;
+        }
+
+        .icono {
+            width: 58px;
+            height: 58px;
+            margin: 7px 0;
+        }
+
+        .texto {
+            font-size: 16px;
+            line-height: 22px;
+            text-align: center;
+        }
+
+        .boton {
+            border-radius: 0;
+        }
+    }
+</style>
